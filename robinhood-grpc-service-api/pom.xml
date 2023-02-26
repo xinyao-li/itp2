@@ -18,20 +18,24 @@
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
             <version>1.47.0</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
             <version>1.47.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>1.52.1</version>
+        </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>protoc-gen-grpc-java</artifactId>
             <version>1.47.0</version>
             <type>pom</type>
         </dependency>
-
         <dependency> <!-- necessary for Java 9+ -->
             <groupId>org.apache.tomcat</groupId>
             <artifactId>annotations-api</artifactId>
@@ -44,27 +48,18 @@
             <extension>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
-                <version>1.6.2</version>
+                <version>1.7.1</version>
             </extension>
         </extensions>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>15</source>
-                    <target>15</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
                 <configuration>
-                    <protocArtifact> com.google.protobuf:protoc:3.19.2:exe:${os.detected.classifier} </protocArtifact>
+                    <protocArtifact>com.google.protobuf:protoc:3.19.2:exe:${os.detected.classifier}</protocArtifact>
                     <pluginId>grpc-java</pluginId>
-                    <pluginArtifact> io.grpc:protoc-gen-grpc-java:1.47.0:exe:${os.detected.classifier} </pluginArtifact>
-                    <protoSourceRoot> ${basedir}/src/main/proto/ </protoSourceRoot>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.47.0:exe:${os.detected.classifier}</pluginArtifact>
                 </configuration>
                 <executions>
                     <execution>
@@ -77,5 +72,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

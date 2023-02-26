@@ -10,10 +10,10 @@
 	<description>Intelligent Trading plateform</description>
 	<modules>
 		<module>robinhood-grpc-service-api</module>
+		<module>StockService</module>
 	</modules>
-
 	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.comiler.target>8</maven.comiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 </project>
