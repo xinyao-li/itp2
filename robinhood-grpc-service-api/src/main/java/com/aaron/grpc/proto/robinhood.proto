@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package robinhood;
+
+option java_multiple_files = true;
+option java_package = "com.aaron.grpc.robinhood";
+//option python_package = "robinhood_pb2";
+
+service RobinhoodService {
+  rpc LOGIN (LoginRequest) returns (LoginResponse) {}
+  rpc QUOTE (QuoteRequest) returns (QuoteResponse) {}
+  rpc BUY (BuyRequest) returns (BuyResponse) {}
+  rpc SELL (SellRequest) returns (SellResponse) {}
+  rpc ApiTest (ApiTestRequest) returns (ApiTestResponse) {}
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message QuoteRequest {
+  string ticker = 1;
+}
+
+message QuoteResponse {
+  double price = 1;
+  string message = 2;
+}
+
+message BuyRequest {
+  string ticker = 1;
+  int32 amount = 2;
+}
+
+message BuyResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message SellRequest {
+  string ticker = 1;
+  int32 amount = 2;
+}
+
+message SellResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ApiTestRequest {
+  double amount = 1;
+}
+
+message ApiTestResponse {
+  bool success = 1;
+  string message = 2;
+}
