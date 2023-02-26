@@ -7,11 +7,11 @@ option java_package = "com.aaron.grpc.robinhood";
 //option python_package = "robinhood_pb2";
 
 service RobinhoodService {
-  rpc LOGIN (LoginRequest) returns (LoginResponse) {}
-  rpc QUOTE (QuoteRequest) returns (QuoteResponse) {}
-  rpc BUY (BuyRequest) returns (BuyResponse) {}
-  rpc SELL (SellRequest) returns (SellResponse) {}
-  rpc ApiTest (ApiTestRequest) returns (ApiTestResponse) {}
+  rpc login (LoginRequest) returns (LoginResponse) {}
+  rpc quote (QuoteRequest) returns (QuoteResponse) {}
+  rpc buy (BuyRequest) returns (BuyResponse) {}
+  rpc sell (SellRequest) returns (SellResponse) {}
+  rpc apiTest (ApiTestRequest) returns (ApiTestResponse) {}
 }
 
 message LoginRequest {
@@ -58,6 +58,6 @@ message ApiTestRequest {
 }
 
 message ApiTestResponse {
-  bool success = 1;
+  double amount = 1;
   string message = 2;
 }

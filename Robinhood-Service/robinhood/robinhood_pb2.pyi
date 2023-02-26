@@ -11,12 +11,12 @@ class ApiTestRequest(_message.Message):
     def __init__(self, amount: _Optional[float] = ...) -> None: ...
 
 class ApiTestResponse(_message.Message):
-    __slots__ = ["message", "success"]
+    __slots__ = ["amount", "message"]
+    AMOUNT_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    amount: float
     message: str
-    success: bool
-    def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
+    def __init__(self, amount: _Optional[float] = ..., message: _Optional[str] = ...) -> None: ...
 
 class BuyRequest(_message.Message):
     __slots__ = ["amount", "ticker"]
