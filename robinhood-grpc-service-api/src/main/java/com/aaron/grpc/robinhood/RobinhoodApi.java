@@ -7,10 +7,6 @@ public class RobinhoodApi {
     private ManagedChannel channel;
     private RobinhoodServiceGrpc.RobinhoodServiceBlockingStub stub;
 
-    public RobinhoodApi(ManagedChannel channel, RobinhoodServiceGrpc.RobinhoodServiceBlockingStub stub){
-        this.channel = channel;
-        this.stub =  stub;
-    }
     public void setup(String name, int port){
         this.channel = ManagedChannelBuilder.forAddress(name,port).usePlaintext().build();
         this.stub = RobinhoodServiceGrpc.newBlockingStub(this.channel);

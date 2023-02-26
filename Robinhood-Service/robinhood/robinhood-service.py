@@ -10,14 +10,15 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
     def login(self, request, context):
         username = request.username
         password = request.password
-        success = True
-        message = "Login successful"
+        message_success = "Login successful"
+        message_fail = "Login Failed"
         totp = pyotp.TOTP("My2factorAppHere").now()
         try:
             login = robin.login(username, password, mfa_code=totp)
+            return robinhood_pb2.LoginResponse(success=True, message=message_success)
         except Exception as e:
             logging.exception("Error during login")
-        return robinhood_pb2.LoginResponse(success=success, message=message)
+        return robinhood_pb2.LoginResponse(success=False, message=message_fail)
 
     def quote(self, request, context):
         ticker = request.ticker
