@@ -1,5 +1,6 @@
 package com.arron.controller;
 
+import com.arron.response.LoginResponse;
 import com.arron.response.Response;
 import com.arron.service.ServiceProvider;
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Random;
 
 @Controller
 @RequestMapping("/ita")
@@ -33,28 +36,46 @@ public class StockController {
             return Response.USERNAME_PASSWORD_INVALID;
         }
         LOGGER.info("login Success");
-        return Response.SUCCESS;
+        String token = genToken();
+
+        return new LoginResponse(token);
     }
     @RequestMapping(value="/quote",method = RequestMethod.GET)
     @ResponseBody
-    public Response quote(@RequestParam("ticker")String ticker) {
+    public double quote(@RequestParam(value="ticker",required = false)String ticker) {
+        Double price = null;
         try {
-            serviceProvider.getRobinhoodService().quote(ticker);
+            price = serviceProvider.getRobinhoodService().quote(ticker);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Response.SUCCESS;
+        System.out.println(price);
+        return price;
     }
-    @RequestMapping(value="/test",method = RequestMethod.POST)
+    @RequestMapping(value="/test",method = RequestMethod.GET)
     @ResponseBody
-    public Response apiTest(@RequestParam(value="amount",required = false)double amount) {
+    public double apiTest(@RequestParam(value="amount",required = false)double amount) {
+        Double result = null;
         try {
-            serviceProvider.getRobinhoodService().apiTest(amount);
+            result = serviceProvider.getRobinhoodService().apiTest(amount);
         }catch(Exception e){
             e.printStackTrace();
-            return Response.USERNAME_PASSWORD_INVALID;
         }
-        return Response.SUCCESS;
+        System.out.println(result);
+        return result;
+    }
+    private String genToken() {
+        return randomCode("0123456789abcdefghijklmnopqrstuvwxyz", 32);
     }
 
+    private String randomCode(String s, int size) {
+        StringBuilder result = new StringBuilder(size);
+
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            int loc = random.nextInt(s.length());
+            result.append(s.charAt(loc));
+        }
+        return result.toString();
+    }
 }

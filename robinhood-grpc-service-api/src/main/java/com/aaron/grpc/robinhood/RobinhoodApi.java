@@ -15,9 +15,10 @@ public class RobinhoodApi {
         LoginRequest loginRequest = LoginRequest.newBuilder().setUsername(username).setPassword(password).build();
         LoginResponse loginResponse = stub.login(loginRequest);
     }
-    public void quote(String ticker){
+    public double quote(String ticker){
         QuoteRequest quoteRequest = QuoteRequest.newBuilder().setTicker(ticker).build();
         QuoteResponse quoteResponse = stub.quote(quoteRequest);
+        return quoteResponse.getPrice();
     }
     public void buy(String ticker,int amount){
         BuyRequest buyRequest = BuyRequest.newBuilder().setTicker(ticker).setAmount(amount).build();
@@ -27,8 +28,9 @@ public class RobinhoodApi {
         SellRequest sellRequest = SellRequest.newBuilder().setTicker(ticker).setAmount(amount).build();
         SellResponse sellResponse = stub.sell(sellRequest);
     }
-    public void apiTest(double amount){
+    public double apiTest(double amount){
         ApiTestRequest apiTestRequest = ApiTestRequest.newBuilder().setAmount(amount).build();
         ApiTestResponse apiTestResponse = stub.apiTest(apiTestRequest);
+        return apiTestResponse.getAmount();
     }
 }

@@ -12,9 +12,9 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
         password = request.password
         message_success = "Login successful"
         message_fail = "Login Failed"
-        totp = pyotp.TOTP("My2factorAppHere").now()
+        #totp = pyotp.TOTP("My2factorAppHere").now()
         try:
-            login = robin.login(username, password, mfa_code=totp)
+            login = robin.login(username, password)
             return robinhood_pb2.LoginResponse(success=True, message=message_success)
         except Exception as e:
             logging.exception("Error during login")
@@ -24,7 +24,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
         ticker = request.ticker
         r = robin.get_latest_price(ticker)
         message = "Quote retrieved"
-        return robinhood_pb2.QuoteResponse(price=r[0], message=message)
+        return robinhood_pb2.QuoteResponse(price=float(r[0]), message=message)
 
     def buy(self, request, context):
         ticker = request.ticker
@@ -44,7 +44,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
     def apiTest(self, request, context):
         amount = request.amount
         message = "Test pass"
-        return robinhood_pb2.SellResponse(amount=amount+1, message=message)
+        return robinhood_pb2.ApiTestResponse(amount=amount+1, message=message)
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

@@ -4,7 +4,6 @@ package robinhood;
 
 option java_multiple_files = true;
 option java_package = "com.aaron.grpc.robinhood";
-//option python_package = "robinhood_pb2";
 
 service RobinhoodService {
   rpc login (LoginRequest) returns (LoginResponse) {}
