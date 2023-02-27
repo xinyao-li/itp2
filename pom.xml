@@ -10,7 +10,7 @@
 	<description>Intelligent Trading plateform</description>
 	<modules>
 		<module>robinhood-grpc-service-api</module>
-		<module>StockService</module>
+		<module>Stock-Service</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
