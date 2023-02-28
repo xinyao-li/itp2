@@ -7,7 +7,8 @@ import javax.persistence.*;
 public class Stock {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "stock_seq")
+    @SequenceGenerator(name = "stock_seq", sequenceName = "stock_seq", allocationSize = 1)
     private Integer id;
 
     @Column(nullable = false)
@@ -16,9 +17,7 @@ public class Stock {
     @Column(nullable = false)
     private String company;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public void setId(Integer id) { this.id = id;}
     public Integer getId() {
         return id;
     }

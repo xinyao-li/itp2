@@ -9,6 +9,8 @@ public class Response {
     public static final Response SELL_FAILED = new Response("1004","Not found the ticker or not enough amount");
 
     public static final Response GET_BALANCE_FAILED = new Response("1005","Failed to get your buy power");
+
+    public static final Response ADD_COLLECTION_FAILED = new Response("1006","Failed to add the stock in collection");
     public static final Response SUCCESS = new Response();
 
     private String code;

@@ -124,12 +124,13 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
                 should_stop.set()
             # Wait for some time before checking the price again
             time.sleep(1)
+
     def getCompany(self, request, context):
         message_success = "Company Name retrieved"
         message_fail = "Not find the company name under this ticker"
         try:
-            stock_info = robin.stocks.get_stock_info(request.ticker)
-            company_name = stock_info['name']
+            company_name = robin.stocks.get_name_by_symbol(request.ticker)
+            print(company_name)
             return robinhood_pb2.CompanyResponse(company=company_name, message=message_success)
         except Exception as e:
             print(e)

@@ -22,7 +22,16 @@ def getBalance():
     except Exception as e:
         logging.exception("Error during get your balance")
     return None
+def getCompany(ticker):
+    try:
+        company_name = robin.stocks.get_name_by_symbol(ticker)
+        print(type(company_name))
+        return company_name
+    except Exception as e:
+        print(e)
+    return None
 
 login("li651854292@gmail.com","19931127Shi@")
 print(quote("AAPL"))
 print(getBalance())
+print(getCompany("AAPL"))

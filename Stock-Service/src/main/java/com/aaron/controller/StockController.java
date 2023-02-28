@@ -1,17 +1,23 @@
 package com.aaron.controller;
 
+import com.aaron.model.Stock;
 import com.aaron.response.LoginResponse;
 import com.aaron.response.Response;
 import com.aaron.service.ServiceProvider;
+import com.aaron.service.StockServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 @Controller
@@ -23,8 +29,8 @@ public class StockController {
     @Autowired
     private ServiceProvider serviceProvider;
 
-    //@Autowired
-    //private StockServiceImp stockServiceImp;
+    @Autowired
+    private StockServiceImp stockServiceImp;
 
     @RequestMapping(value="/login",method = RequestMethod.GET)
     public String login() {return "login";}
@@ -134,6 +140,28 @@ public class StockController {
         LOGGER.info("AutoSell Completed");
         return Response.SUCCESS;
     }
+
+    @RequestMapping(value="/collection",method = RequestMethod.GET)
+    @ResponseBody
+    public List<Stock> listCollection(){
+        List<Stock> collection = stockServiceImp.listCollection();
+        System.out.println(collection);
+        return collection;
+    }
+    @RequestMapping(value="/addCollection",method = RequestMethod.POST)
+    @ResponseBody
+    public Response addCollection(@RequestParam("ticker")String ticker){
+        String company = serviceProvider.getRobinhoodService().getCompany(ticker);
+        if (Objects.nonNull(company)){
+            Stock stock = new Stock();
+            stock.setTicker(ticker);
+            stock.setCompany(company);
+            stockServiceImp.addStock(stock);
+            return Response.SUCCESS;
+        }
+        return Response.ADD_COLLECTION_FAILED;
+    }
+
     private String genToken() {
         return randomCode("0123456789abcdefghijklmnopqrstuvwxyz", 32);
     }
