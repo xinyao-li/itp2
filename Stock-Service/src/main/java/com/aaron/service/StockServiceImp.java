@@ -10,6 +10,7 @@ import java.util.List;
 
 @Service
 public class StockServiceImp implements StockMapper {
+
     @Autowired
     private StockRepository stockRepository;
 
@@ -27,7 +28,7 @@ public class StockServiceImp implements StockMapper {
     }
 
     @Override
-    public Stock findByName(String company) {
-        return stockRepository.findByName(company);
+    public Stock findByCompany(String company) {
+        return stockRepository.findByCompany(company);
     }
 }

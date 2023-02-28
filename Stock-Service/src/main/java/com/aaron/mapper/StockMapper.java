@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface StockMapper {
     Stock findByTicker(String ticker);
-    Stock findByName(String company);
+    Stock findByCompany(String company);
     List<Stock> listCollection();
     void addStock(Stock stock);
 }

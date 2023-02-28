@@ -22,6 +22,10 @@ public class StockController {
 
     @Autowired
     private ServiceProvider serviceProvider;
+
+    //@Autowired
+    //private StockServiceImp stockServiceImp;
+
     @RequestMapping(value="/login",method = RequestMethod.GET)
     public String login() {return "login";}
 
