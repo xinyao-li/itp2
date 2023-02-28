@@ -40,6 +40,18 @@ public class StockController {
 
         return new LoginResponse(token);
     }
+    @RequestMapping(value="/logout",method = RequestMethod.POST)
+    @ResponseBody
+    public Response logout(){
+        try{
+            serviceProvider.getRobinhoodService().logout();
+        }catch(Exception e){
+            e.printStackTrace();
+            return Response.USERNAME_PASSWORD_INVALID;
+        }
+        LOGGER.info("logout Success");
+        return Response.SUCCESS;
+    }
     @RequestMapping(value="/quote",method = RequestMethod.GET)
     @ResponseBody
     public double quote(@RequestParam(value="ticker",required = false)String ticker) {
@@ -48,26 +60,79 @@ public class StockController {
             price = serviceProvider.getRobinhoodService().quote(ticker);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(Response.N0_SUCH_TIKCER);
         }
         System.out.println(price);
         return price;
     }
-    @RequestMapping(value="/test",method = RequestMethod.GET)
+    @RequestMapping(value="/buy",method = RequestMethod.POST)
     @ResponseBody
-    public double apiTest(@RequestParam(value="amount",required = false)double amount) {
-        Double result = null;
-        try {
-            result = serviceProvider.getRobinhoodService().apiTest(amount);
+    public Response buy(@RequestParam("ticker")String ticker, @RequestParam("amount")int amount){
+        try{
+            LOGGER.info(ticker+","+amount);
+            serviceProvider.getRobinhoodService().buy(ticker, amount);
         }catch(Exception e){
             e.printStackTrace();
+            return Response.BUY_FAILED;
         }
-        System.out.println(result);
-        return result;
+        LOGGER.info("Buy Success");
+        return Response.SUCCESS;
+    }
+    @RequestMapping(value="/sell",method = RequestMethod.POST)
+    @ResponseBody
+    public Response sell(@RequestParam("ticker")String ticker, @RequestParam("amount")int amount){
+        try{
+            LOGGER.info(ticker+","+amount);
+            serviceProvider.getRobinhoodService().sell(ticker, amount);
+        }catch(Exception e){
+            e.printStackTrace();
+            return Response.SELL_FAILED;
+        }
+        LOGGER.info("Sell Success");
+        return Response.SUCCESS;
+    }
+    @RequestMapping(value="/buyPower",method = RequestMethod.GET)
+    @ResponseBody
+    public double getBalance() {
+        Double balance = null;
+        try {
+            balance = serviceProvider.getRobinhoodService().getBalance();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(Response.GET_BALANCE_FAILED);
+        }
+        System.out.println(balance);
+        return balance;
+    }
+    @RequestMapping(value="/autoBuy",method = RequestMethod.POST)
+    @ResponseBody
+    public Response autoBuy(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
+        try{
+            LOGGER.info(ticker+","+target+","+amount);
+            serviceProvider.getRobinhoodService().autoBuy(ticker, target,amount);
+        }catch(Exception e){
+            e.printStackTrace();
+            return Response.BUY_FAILED;
+        }
+        LOGGER.info("AutoBuy Completed");
+        return Response.SUCCESS;
+    }
+    @RequestMapping(value="/autoSell",method = RequestMethod.POST)
+    @ResponseBody
+    public Response autoSell(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
+        try{
+            LOGGER.info(ticker+","+target+","+amount);
+            serviceProvider.getRobinhoodService().autoSell(ticker, target,amount);
+        }catch(Exception e){
+            e.printStackTrace();
+            return Response.SELL_FAILED;
+        }
+        LOGGER.info("AutoSell Completed");
+        return Response.SUCCESS;
     }
     private String genToken() {
         return randomCode("0123456789abcdefghijklmnopqrstuvwxyz", 32);
     }
-
     private String randomCode(String s, int size) {
         StringBuilder result = new StringBuilder(size);
 

@@ -7,10 +7,13 @@ option java_package = "com.aaron.grpc.robinhood";
 
 service RobinhoodService {
   rpc login (LoginRequest) returns (LoginResponse) {}
+  rpc logout(LogoutRequest) returns (LogoutResponse){}
   rpc quote (QuoteRequest) returns (QuoteResponse) {}
   rpc buy (BuyRequest) returns (BuyResponse) {}
   rpc sell (SellRequest) returns (SellResponse) {}
-  rpc apiTest (ApiTestRequest) returns (ApiTestResponse) {}
+  rpc getBalance(BalanceRequest) returns (BalanceResponse){}
+  rpc autoBuy(AutoBuyRequest) returns (AutoBuyResponse){}
+  rpc autoSell(AutoSellRequest) returns (AutoSellResponse){}
 }
 
 message LoginRequest {
@@ -19,6 +22,12 @@ message LoginRequest {
 }
 
 message LoginResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message LogoutRequest {}
+message LogoutResponse {
   bool success = 1;
   string message = 2;
 }
@@ -34,7 +43,7 @@ message QuoteResponse {
 
 message BuyRequest {
   string ticker = 1;
-  int32 amount = 2;
+  double amount = 2;
 }
 
 message BuyResponse {
@@ -44,19 +53,39 @@ message BuyResponse {
 
 message SellRequest {
   string ticker = 1;
-  int32 amount = 2;
+  double amount = 2;
 }
 
 message SellResponse {
   bool success = 1;
   string message = 2;
 }
+message BalanceRequest{
 
-message ApiTestRequest {
-  double amount = 1;
+}
+message BalanceResponse{
+  double balance = 1;
+  string message = 2;
 }
 
-message ApiTestResponse {
-  double amount = 1;
+message AutoBuyRequest {
+  string ticker = 1;
+  double target = 2;
+  double amount = 3;
+}
+
+message AutoBuyResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message AutoSellRequest {
+  string ticker = 1;
+  double target = 2;
+  double amount = 3;
+}
+
+message AutoSellResponse {
+  bool success = 1;
   string message = 2;
 }

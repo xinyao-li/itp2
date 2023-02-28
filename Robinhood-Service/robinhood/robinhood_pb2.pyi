@@ -4,27 +4,61 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class ApiTestRequest(_message.Message):
-    __slots__ = ["amount"]
+class AutoBuyRequest(_message.Message):
+    __slots__ = ["amount", "target", "ticker"]
     AMOUNT_FIELD_NUMBER: _ClassVar[int]
+    TARGET_FIELD_NUMBER: _ClassVar[int]
+    TICKER_FIELD_NUMBER: _ClassVar[int]
     amount: float
-    def __init__(self, amount: _Optional[float] = ...) -> None: ...
+    target: float
+    ticker: str
+    def __init__(self, ticker: _Optional[str] = ..., target: _Optional[float] = ..., amount: _Optional[float] = ...) -> None: ...
 
-class ApiTestResponse(_message.Message):
-    __slots__ = ["amount", "message"]
-    AMOUNT_FIELD_NUMBER: _ClassVar[int]
+class AutoBuyResponse(_message.Message):
+    __slots__ = ["message", "success"]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    amount: float
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
     message: str
-    def __init__(self, amount: _Optional[float] = ..., message: _Optional[str] = ...) -> None: ...
+    success: bool
+    def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
+
+class AutoSellRequest(_message.Message):
+    __slots__ = ["amount", "target", "ticker"]
+    AMOUNT_FIELD_NUMBER: _ClassVar[int]
+    TARGET_FIELD_NUMBER: _ClassVar[int]
+    TICKER_FIELD_NUMBER: _ClassVar[int]
+    amount: float
+    target: float
+    ticker: str
+    def __init__(self, ticker: _Optional[str] = ..., target: _Optional[float] = ..., amount: _Optional[float] = ...) -> None: ...
+
+class AutoSellResponse(_message.Message):
+    __slots__ = ["message", "success"]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    message: str
+    success: bool
+    def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
+
+class BalanceRequest(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
+
+class BalanceResponse(_message.Message):
+    __slots__ = ["balance", "message"]
+    BALANCE_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    balance: float
+    message: str
+    def __init__(self, balance: _Optional[float] = ..., message: _Optional[str] = ...) -> None: ...
 
 class BuyRequest(_message.Message):
     __slots__ = ["amount", "ticker"]
     AMOUNT_FIELD_NUMBER: _ClassVar[int]
     TICKER_FIELD_NUMBER: _ClassVar[int]
-    amount: int
+    amount: float
     ticker: str
-    def __init__(self, ticker: _Optional[str] = ..., amount: _Optional[int] = ...) -> None: ...
+    def __init__(self, ticker: _Optional[str] = ..., amount: _Optional[float] = ...) -> None: ...
 
 class BuyResponse(_message.Message):
     __slots__ = ["message", "success"]
@@ -50,6 +84,18 @@ class LoginResponse(_message.Message):
     success: bool
     def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
 
+class LogoutRequest(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
+
+class LogoutResponse(_message.Message):
+    __slots__ = ["message", "success"]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    message: str
+    success: bool
+    def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
+
 class QuoteRequest(_message.Message):
     __slots__ = ["ticker"]
     TICKER_FIELD_NUMBER: _ClassVar[int]
@@ -68,9 +114,9 @@ class SellRequest(_message.Message):
     __slots__ = ["amount", "ticker"]
     AMOUNT_FIELD_NUMBER: _ClassVar[int]
     TICKER_FIELD_NUMBER: _ClassVar[int]
-    amount: int
+    amount: float
     ticker: str
-    def __init__(self, ticker: _Optional[str] = ..., amount: _Optional[int] = ...) -> None: ...
+    def __init__(self, ticker: _Optional[str] = ..., amount: _Optional[float] = ...) -> None: ...
 
 class SellResponse(_message.Message):
     __slots__ = ["message", "success"]

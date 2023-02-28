@@ -19,6 +19,11 @@ class RobinhoodServiceStub(object):
                 request_serializer=robinhood__pb2.LoginRequest.SerializeToString,
                 response_deserializer=robinhood__pb2.LoginResponse.FromString,
                 )
+        self.logout = channel.unary_unary(
+                '/robinhood.RobinhoodService/logout',
+                request_serializer=robinhood__pb2.LogoutRequest.SerializeToString,
+                response_deserializer=robinhood__pb2.LogoutResponse.FromString,
+                )
         self.quote = channel.unary_unary(
                 '/robinhood.RobinhoodService/quote',
                 request_serializer=robinhood__pb2.QuoteRequest.SerializeToString,
@@ -34,10 +39,20 @@ class RobinhoodServiceStub(object):
                 request_serializer=robinhood__pb2.SellRequest.SerializeToString,
                 response_deserializer=robinhood__pb2.SellResponse.FromString,
                 )
-        self.apiTest = channel.unary_unary(
-                '/robinhood.RobinhoodService/apiTest',
-                request_serializer=robinhood__pb2.ApiTestRequest.SerializeToString,
-                response_deserializer=robinhood__pb2.ApiTestResponse.FromString,
+        self.getBalance = channel.unary_unary(
+                '/robinhood.RobinhoodService/getBalance',
+                request_serializer=robinhood__pb2.BalanceRequest.SerializeToString,
+                response_deserializer=robinhood__pb2.BalanceResponse.FromString,
+                )
+        self.autoBuy = channel.unary_unary(
+                '/robinhood.RobinhoodService/autoBuy',
+                request_serializer=robinhood__pb2.AutoBuyRequest.SerializeToString,
+                response_deserializer=robinhood__pb2.AutoBuyResponse.FromString,
+                )
+        self.autoSell = channel.unary_unary(
+                '/robinhood.RobinhoodService/autoSell',
+                request_serializer=robinhood__pb2.AutoSellRequest.SerializeToString,
+                response_deserializer=robinhood__pb2.AutoSellResponse.FromString,
                 )
 
 
@@ -45,6 +60,12 @@ class RobinhoodServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def login(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def logout(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -68,7 +89,19 @@ class RobinhoodServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def apiTest(self, request, context):
+    def getBalance(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def autoBuy(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def autoSell(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -81,6 +114,11 @@ def add_RobinhoodServiceServicer_to_server(servicer, server):
                     servicer.login,
                     request_deserializer=robinhood__pb2.LoginRequest.FromString,
                     response_serializer=robinhood__pb2.LoginResponse.SerializeToString,
+            ),
+            'logout': grpc.unary_unary_rpc_method_handler(
+                    servicer.logout,
+                    request_deserializer=robinhood__pb2.LogoutRequest.FromString,
+                    response_serializer=robinhood__pb2.LogoutResponse.SerializeToString,
             ),
             'quote': grpc.unary_unary_rpc_method_handler(
                     servicer.quote,
@@ -97,10 +135,20 @@ def add_RobinhoodServiceServicer_to_server(servicer, server):
                     request_deserializer=robinhood__pb2.SellRequest.FromString,
                     response_serializer=robinhood__pb2.SellResponse.SerializeToString,
             ),
-            'apiTest': grpc.unary_unary_rpc_method_handler(
-                    servicer.apiTest,
-                    request_deserializer=robinhood__pb2.ApiTestRequest.FromString,
-                    response_serializer=robinhood__pb2.ApiTestResponse.SerializeToString,
+            'getBalance': grpc.unary_unary_rpc_method_handler(
+                    servicer.getBalance,
+                    request_deserializer=robinhood__pb2.BalanceRequest.FromString,
+                    response_serializer=robinhood__pb2.BalanceResponse.SerializeToString,
+            ),
+            'autoBuy': grpc.unary_unary_rpc_method_handler(
+                    servicer.autoBuy,
+                    request_deserializer=robinhood__pb2.AutoBuyRequest.FromString,
+                    response_serializer=robinhood__pb2.AutoBuyResponse.SerializeToString,
+            ),
+            'autoSell': grpc.unary_unary_rpc_method_handler(
+                    servicer.autoSell,
+                    request_deserializer=robinhood__pb2.AutoSellRequest.FromString,
+                    response_serializer=robinhood__pb2.AutoSellResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -126,6 +174,23 @@ class RobinhoodService(object):
         return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/login',
             robinhood__pb2.LoginRequest.SerializeToString,
             robinhood__pb2.LoginResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def logout(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/logout',
+            robinhood__pb2.LogoutRequest.SerializeToString,
+            robinhood__pb2.LogoutResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -181,7 +246,7 @@ class RobinhoodService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def apiTest(request,
+    def getBalance(request,
             target,
             options=(),
             channel_credentials=None,
@@ -191,8 +256,42 @@ class RobinhoodService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/apiTest',
-            robinhood__pb2.ApiTestRequest.SerializeToString,
-            robinhood__pb2.ApiTestResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/getBalance',
+            robinhood__pb2.BalanceRequest.SerializeToString,
+            robinhood__pb2.BalanceResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def autoBuy(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/autoBuy',
+            robinhood__pb2.AutoBuyRequest.SerializeToString,
+            robinhood__pb2.AutoBuyResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def autoSell(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/autoSell',
+            robinhood__pb2.AutoSellRequest.SerializeToString,
+            robinhood__pb2.AutoSellResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
