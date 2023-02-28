@@ -22,47 +22,56 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
 
     def logout(self, request, context):
         message_success = "Logout successful"
+        message_fail = "Logout failed"
         try:
             robin.authentication.logout()
         except Exception as e:
             logging.exception("Error during logout")
+            return robinhood_pb2.LoginResponse(success=False, message=message_fail)
         return robinhood_pb2.LoginResponse(success=True, message=message_success)
     def quote(self, request, context):
         ticker = request.ticker
+        message_success = "Quote retrieved"
+        message_fail = "Quote retrieved failed"
         try:
             r = robin.get_latest_price(ticker)
         except Exception as e:
             logging.exception("No such ticker")
-        message = "Quote retrieved"
-        return robinhood_pb2.QuoteResponse(price=float(r[0]), message=message)
+            return robinhood_pb2.QuoteResponse(price=None, message=message_fail)
+        return robinhood_pb2.QuoteResponse(price=float(r[0]), message=message_success)
 
     def buy(self, request, context):
         ticker = request.ticker
         amount = request.amount
+        message_success = "Shares bought"
+        message_fail = "bought fail"
         try:
             r = robin.order_buy_market(ticker, amount)
         except Exception as e:
             logging.exception("No such ticker or not enough balance")
-        message = "Stock bought"
-        return robinhood_pb2.BuyResponse(success=True, message=message)
+            return robinhood_pb2.BuyResponse(success=False, message=message_fail)
+        return robinhood_pb2.BuyResponse(success=True, message=message_success)
 
     def sell(self, request, context):
         ticker = request.ticker
         amount = request.amount
+        message_success = "Shares sold"
+        message_fail = "Sold failed"
         try:
             r = robin.order_sell_market(ticker, amount)
         except Exception as e:
             logging.exception("No such ticker or not enough shares")
-        message = "Stock sold"
-        return robinhood_pb2.SellResponse(success=True, message=message)
+            return robinhood_pb2.SellResponse(success=False, message=message_fail)
+        return robinhood_pb2.SellResponse(success=True, message=message_success)
     def getBalance(self, request, context):
         try:
-            account = robin.accounts.get_accounts()[0]
-            balance = float(account['buying_power'])
+            profile = robin.account.load_account_profile()
+            balance = float(profile['buying_power'])
             message = str(balance)
             return robinhood_pb2.BalanceResponse(balance=balance,message=message)
         except Exception as e:
             logging.exception("Error during get your balance")
+        return robinhood_pb2.BalanceResponse(balance=None,message="You have no buying power now")
     def autoBuy(self, request, context):
         should_stop = threading.Event()
         thread = threading.Thread(target=self.checkBuyPrice(should_stop,request,context))

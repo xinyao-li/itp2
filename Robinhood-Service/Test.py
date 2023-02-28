@@ -14,5 +14,15 @@ def quote(ticker):
     print(type(r[0]))
     return float(r[0])
 
+def getBalance():
+    try:
+        profile = robin.account.load_account_profile()
+        balance = float(profile['buying_power'])
+        return balance
+    except Exception as e:
+        logging.exception("Error during get your balance")
+    return None
+
 login("li651854292@gmail.com","19931127Shi@")
 print(quote("AAPL"))
+print(getBalance())
