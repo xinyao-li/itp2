@@ -68,6 +68,20 @@ class BuyResponse(_message.Message):
     success: bool
     def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
 
+class CompanyRequest(_message.Message):
+    __slots__ = ["ticker"]
+    TICKER_FIELD_NUMBER: _ClassVar[int]
+    ticker: str
+    def __init__(self, ticker: _Optional[str] = ...) -> None: ...
+
+class CompanyResponse(_message.Message):
+    __slots__ = ["company", "message"]
+    COMPANY_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    company: str
+    message: str
+    def __init__(self, company: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
+
 class LoginRequest(_message.Message):
     __slots__ = ["password", "username"]
     PASSWORD_FIELD_NUMBER: _ClassVar[int]

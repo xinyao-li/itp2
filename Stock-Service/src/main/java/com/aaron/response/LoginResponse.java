@@ -1,4 +1,4 @@
-package com.arron.response;
+package com.aaron.response;
 
 public class LoginResponse extends Response {
     private String token;

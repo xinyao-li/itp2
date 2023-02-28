@@ -29,6 +29,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
             logging.exception("Error during logout")
             return robinhood_pb2.LoginResponse(success=False, message=message_fail)
         return robinhood_pb2.LoginResponse(success=True, message=message_success)
+
     def quote(self, request, context):
         ticker = request.ticker
         message_success = "Quote retrieved"
@@ -63,6 +64,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
             logging.exception("No such ticker or not enough shares")
             return robinhood_pb2.SellResponse(success=False, message=message_fail)
         return robinhood_pb2.SellResponse(success=True, message=message_success)
+
     def getBalance(self, request, context):
         try:
             profile = robin.account.load_account_profile()
@@ -72,18 +74,21 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
         except Exception as e:
             logging.exception("Error during get your balance")
         return robinhood_pb2.BalanceResponse(balance=None,message="You have no buying power now")
+
     def autoBuy(self, request, context):
         should_stop = threading.Event()
         thread = threading.Thread(target=self.checkBuyPrice(should_stop,request,context))
         thread.start()
         print("autoBuy is triggered")
         thread.join()
+
     def autoSell(self, request, context):
         should_stop = threading.Event()
         thread = threading.Thread(target=self.checkSellPrice(should_stop,request,context))
         thread.start()
         print("autoSell is triggered")
         thread.join()
+
     def checkBuyPrice(self,should_stop,request,context):
         while not should_stop.is_set():
             cur_price = None;
@@ -101,6 +106,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
                 should_stop.set()
             # Wait for some time before checking the price again
             time.sleep(1)
+
     def checkSellPrice(self,should_stop,request,context):
         while not should_stop.is_set():
             cur_price = None;
@@ -118,7 +124,16 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
                 should_stop.set()
             # Wait for some time before checking the price again
             time.sleep(1)
-
+    def getCompany(self, request, context):
+        message_success = "Company Name retrieved"
+        message_fail = "Not find the company name under this ticker"
+        try:
+            stock_info = robin.stocks.get_stock_info(request.ticker)
+            company_name = stock_info['name']
+            return robinhood_pb2.CompanyResponse(company=company_name, message=message_success)
+        except Exception as e:
+            print(e)
+        return robinhood_pb2.CompanyResponse(company=None, message=message_fail)
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

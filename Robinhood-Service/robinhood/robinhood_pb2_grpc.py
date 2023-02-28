@@ -54,6 +54,11 @@ class RobinhoodServiceStub(object):
                 request_serializer=robinhood__pb2.AutoSellRequest.SerializeToString,
                 response_deserializer=robinhood__pb2.AutoSellResponse.FromString,
                 )
+        self.getCompany = channel.unary_unary(
+                '/robinhood.RobinhoodService/getCompany',
+                request_serializer=robinhood__pb2.CompanyRequest.SerializeToString,
+                response_deserializer=robinhood__pb2.CompanyResponse.FromString,
+                )
 
 
 class RobinhoodServiceServicer(object):
@@ -107,6 +112,12 @@ class RobinhoodServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getCompany(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_RobinhoodServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -149,6 +160,11 @@ def add_RobinhoodServiceServicer_to_server(servicer, server):
                     servicer.autoSell,
                     request_deserializer=robinhood__pb2.AutoSellRequest.FromString,
                     response_serializer=robinhood__pb2.AutoSellResponse.SerializeToString,
+            ),
+            'getCompany': grpc.unary_unary_rpc_method_handler(
+                    servicer.getCompany,
+                    request_deserializer=robinhood__pb2.CompanyRequest.FromString,
+                    response_serializer=robinhood__pb2.CompanyResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -293,5 +309,22 @@ class RobinhoodService(object):
         return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/autoSell',
             robinhood__pb2.AutoSellRequest.SerializeToString,
             robinhood__pb2.AutoSellResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getCompany(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/getCompany',
+            robinhood__pb2.CompanyRequest.SerializeToString,
+            robinhood__pb2.CompanyResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

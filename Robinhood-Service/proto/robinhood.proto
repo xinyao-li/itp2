@@ -14,6 +14,7 @@ service RobinhoodService {
   rpc getBalance(BalanceRequest) returns (BalanceResponse){}
   rpc autoBuy(AutoBuyRequest) returns (AutoBuyResponse){}
   rpc autoSell(AutoSellRequest) returns (AutoSellResponse){}
+  rpc getCompany(CompanyRequest) returns (CompanyResponse){}
 }
 
 message LoginRequest {
@@ -87,5 +88,14 @@ message AutoSellRequest {
 
 message AutoSellResponse {
   bool success = 1;
+  string message = 2;
+}
+
+message CompanyRequest{
+  string ticker = 1;
+}
+
+message CompanyResponse{
+  string company = 1;
   string message = 2;
 }
