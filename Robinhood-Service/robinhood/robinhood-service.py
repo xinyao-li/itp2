@@ -9,6 +9,7 @@ import time
 import robin_stocks.robinhood as robin
 
 class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
+
     def login(self, request, context):
         username = request.username
         password = request.password

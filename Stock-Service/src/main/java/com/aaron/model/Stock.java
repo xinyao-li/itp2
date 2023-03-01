@@ -18,18 +18,23 @@ public class Stock {
     private String company;
 
     public void setId(Integer id) { this.id = id;}
+
     public Integer getId() {
         return id;
     }
+
     public void setTicker(String ticker){
         this.ticker = ticker;
     }
+
     public String getTicker(){
         return ticker;
     }
+
     public void setCompany(String company){
         this.company = company;
     }
+
     public String getCompany(){
         return company;
     }
