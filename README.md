@@ -1,4 +1,4 @@
-# **Intelligent Trading plateform**
+# **Intelligent Trading Plateform**
 
 ## What is it
 
