@@ -18,10 +18,12 @@ public class StockServiceImp implements StockMapper {
     public List<Stock> listCollection() {
         return stockRepository.findAll();
     }
+
     @Override
     public void addStock(Stock stock) {
         stockRepository.save(stock);
     }
+
     @Override
     public Stock findByTicker(String ticker) {
         return stockRepository.findByTicker(ticker);
@@ -30,5 +32,15 @@ public class StockServiceImp implements StockMapper {
     @Override
     public Stock findByCompany(String company) {
         return stockRepository.findByCompany(company);
+    }
+
+    @Override
+    public void deleteByTicker(String ticker){
+        stockRepository.delete(stockRepository.findByTicker(ticker));
+    }
+
+    @Override
+    public void deleteByCompany(String company){
+        stockRepository.delete(stockRepository.findByCompany(company));
     }
 }

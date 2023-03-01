@@ -8,14 +8,12 @@ import com.aaron.service.StockServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -160,6 +158,31 @@ public class StockController {
             return Response.SUCCESS;
         }
         return Response.ADD_COLLECTION_FAILED;
+    }
+
+    @RequestMapping(value="/removeCollectionStock",method = RequestMethod.DELETE)
+    @ResponseBody
+    public Response removeCollectionStock(@RequestParam("name")String name){
+        if (Objects.nonNull(stockServiceImp.findByTicker(name))){
+            stockServiceImp.deleteByTicker(name);
+            return Response.SUCCESS;
+        }
+        if(Objects.nonNull(stockServiceImp.findByCompany(name))){
+            stockServiceImp.deleteByCompany(name);
+            return Response.SUCCESS;
+        }
+        return Response.NO_SUCH_COMPANY;
+    }
+    @RequestMapping(value="/searchCollectionStock",method = RequestMethod.GET)
+    @ResponseBody
+    public Stock searchCollectionStock(@RequestParam("name")String name){
+        if (Objects.nonNull(stockServiceImp.findByTicker(name))){
+            return stockServiceImp.findByTicker(name);
+        }
+        if(Objects.nonNull(stockServiceImp.findByCompany(name))){
+            return stockServiceImp.findByCompany(name);
+        }
+        return null;
     }
 
     private String genToken() {

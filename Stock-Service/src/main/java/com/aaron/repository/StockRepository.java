@@ -9,5 +9,6 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
 
     Stock findByTicker(String ticker);
     Stock findByCompany(String company);
-
+    void deleteByTicker(String ticker);
+    void deleteByCompany(String company);
 }

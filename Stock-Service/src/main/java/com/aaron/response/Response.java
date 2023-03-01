@@ -11,6 +11,8 @@ public class Response {
     public static final Response GET_BALANCE_FAILED = new Response("1005","Failed to get your buy power");
 
     public static final Response ADD_COLLECTION_FAILED = new Response("1006","Failed to add the stock in collection");
+
+    public static final Response NO_SUCH_COMPANY = new Response("1007","Not found such a company or ticker in collection");
     public static final Response SUCCESS = new Response();
 
     private String code;
