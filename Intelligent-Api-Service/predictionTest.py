@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import datetime as dt
 #import tensorflow.compat.v2 as tf
 
+
 plt.style.use('fivethirtyeight')
 
 #Get the stock quote
