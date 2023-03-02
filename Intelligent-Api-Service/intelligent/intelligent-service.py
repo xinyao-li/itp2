@@ -17,8 +17,8 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
 
     def plotPrediction(self, request, context):
         ticker = request.ticker
-        start = request.start
-        end = request.end
+        start = request.startDate
+        end = request.endDate
 
         start_array = start.split("-")
         end_array = end.split("-")
@@ -122,8 +122,8 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
     def pricePredict(self, request, context):
 
         ticker = request.ticker
-        start = request.start
-        end = request.end
+        start = request.startDate
+        end = request.endDate
 
         start_array = start.split("-")
         end_array = end.split("-")
@@ -194,8 +194,6 @@ if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))
     intelligent_pb2_grpc.add_IntelligentServiceServicer_to_server(IntelligentServicer(), server)
     server.add_insecure_port("[::]:7911")
-    #address = os.environ.get('ADDRESS', 'localhost')
-    #server.add_insecure_port(f"{address}:7911")
     print("Intelligent Python server start")
     server.start()
     server.wait_for_termination()
