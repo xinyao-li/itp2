@@ -6,4 +6,4 @@ COPY . .
 COPY intelligent /app/intelligent
 ENV PYTHONPATH="${PYTHONPATH}:/app"
 RUN pip install protobuf==3.20.*
-CMD ["python", "intelligent-service.py"]
+CMD ["python", "/app/intelligent/intelligent-service.py"]
