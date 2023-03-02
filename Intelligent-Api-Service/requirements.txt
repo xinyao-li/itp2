@@ -1,0 +1,9 @@
+grpcio
+yfinance
+numpy
+pandas
+scikit-learn
+keras
+matplotlib
+tensorflow
+grpcio-tools
