@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.Random;
 
 @Controller
-@RequestMapping("/ita")
+@RequestMapping("/stock")
 public class StockController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(StockController.class);
