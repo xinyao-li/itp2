@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package intelligent;
+
+option java_multiple_files = true;
+option java_package = "com.aaron.grpc.intelligent";
+
+message PlotRequest{
+  string ticker = 1;
+  string startDate = 2;
+  string endDate = 3;
+}
+
+message PlotResponse{
+  bool success = 1;
+  string message = 2;
+}
+
+message PriceRequest{
+  string ticker = 1;
+  string startDate = 2;
+  string endDate = 3;
+}
+
+message PriceResponse{
+  double price = 1;
+  string message = 2;
+}
+
+service IntelligentService {
+  rpc plotPrediction(PlotRequest) returns (PlotResponse){}
+  rpc pricePredict(PriceRequest) returns (PriceResponse){}
+}

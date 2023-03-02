@@ -69,7 +69,7 @@ model.add(Dense(1))
 model.compile(optimizer='adam', loss='mean_squared_error')
 
 #Train the model
-model.fit(x_train, y_train, batch_size=1, epoch=1)
+model.fit(x_train, y_train, batch_size=1, epochs=1)
 
 #Create the testing dataset
 #Create a new array containing scaled values from index 1543 to 2003
@@ -102,7 +102,7 @@ plt.title('Model')
 plt.xlabel('Date', fontsize=18)
 plt.ylabel('Close Price USD ($)', fontsize=18)
 plt.plot(train['Close'])
-plt.plot(valid[['Train', 'Val', 'Predictions']])
+plt.plot(valid[['Close', 'Predictions']])
 plt.legend(['Train', 'Val', 'Predictions'], loc='lower right')
 plt.show()
 

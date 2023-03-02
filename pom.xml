@@ -11,7 +11,8 @@
 	<modules>
 		<module>robinhood-grpc-service-api</module>
 		<module>Stock-Service</module>
-	</modules>
+        <module>Intelligent-grpc-service-api</module>
+    </modules>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>

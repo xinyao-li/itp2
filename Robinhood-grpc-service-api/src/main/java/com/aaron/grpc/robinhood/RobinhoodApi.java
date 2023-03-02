@@ -4,7 +4,9 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 public class RobinhoodApi {
+
     private ManagedChannel channel;
+
     private RobinhoodServiceGrpc.RobinhoodServiceBlockingStub stub;
 
     public void setup(String name, int port){

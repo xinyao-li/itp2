@@ -141,6 +141,6 @@ if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     robinhood_pb2_grpc.add_RobinhoodServiceServicer_to_server(RobinhoodServicer(), server)
     server.add_insecure_port("localhost:9090")
-    print ("Python server start")
+    print ("Robinhood Python server start")
     server.start()
     server.wait_for_termination()
