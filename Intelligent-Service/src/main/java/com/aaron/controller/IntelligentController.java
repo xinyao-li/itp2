@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -63,6 +60,7 @@ public class IntelligentController {
         Random random = new Random();
         Stock stock = stockList.get(random.nextInt(stockList.size()));
         String ticker = stock.getTicker();
+        LOGGER.info("stock is chosen is: "+ticker);
         String nextMonth = "";
         String prevYear = "";
         try {

@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name="collection_table")
 public class Stock {
 
-    @Column(nullable = false)
+    @Id
     private Integer id;
 
     @Column(nullable = false)
