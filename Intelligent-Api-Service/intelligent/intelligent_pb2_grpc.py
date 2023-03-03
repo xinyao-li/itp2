@@ -22,7 +22,7 @@ class IntelligentServiceStub(object):
         self.pricePredict = channel.unary_unary(
                 '/intelligent.IntelligentService/pricePredict',
                 request_serializer=intelligent__pb2.PriceRequest.SerializeToString,
-                response_deserializer=intelligent__pb2.PlotResponse.FromString,
+                response_deserializer=intelligent__pb2.PriceResponse.FromString,
                 )
 
 
@@ -52,7 +52,7 @@ def add_IntelligentServiceServicer_to_server(servicer, server):
             'pricePredict': grpc.unary_unary_rpc_method_handler(
                     servicer.pricePredict,
                     request_deserializer=intelligent__pb2.PriceRequest.FromString,
-                    response_serializer=intelligent__pb2.PlotResponse.SerializeToString,
+                    response_serializer=intelligent__pb2.PriceResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -94,6 +94,6 @@ class IntelligentService(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/intelligent.IntelligentService/pricePredict',
             intelligent__pb2.PriceRequest.SerializeToString,
-            intelligent__pb2.PlotResponse.FromString,
+            intelligent__pb2.PriceResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

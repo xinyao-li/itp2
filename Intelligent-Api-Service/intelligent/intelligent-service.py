@@ -22,17 +22,17 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
 
         start_array = start.split("-")
         end_array = end.split("-")
-        start = dt.datetime(int(start_array[0]),int(start_array[1]),int(start_array[2]))
-        end = dt.datetime(int(end_array[0]),int(end_array[1]),int(end_array[2]))
+        start = dt.datetime(int(start_array[0]), int(start_array[1]), int(start_array[2]))
+        end = dt.datetime(int(end_array[0]), int(end_array[1]), int(end_array[2]))
 
-        df = yf.download(ticker, start ,end)
+        df = yf.download(ticker, start, end)
         #Create a new dataframe with only the Close column
         data = df.filter(['Close'])
         dataset = data.values
         training_data_len = math.ceil(len(dataset)*.8)
 
         #Scale the data
-        scaler = MinMaxScaler(feature_range=(0,1))
+        scaler = MinMaxScaler(feature_range=(0, 1))
         scaled_data = scaler.fit_transform(dataset)
 
         #Create the training data set
@@ -42,12 +42,12 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
         y_train = []
 
         for i in range(60,len(train_data)):
-            x_train.append(train_data[i-60:i,0])
-            y_train.append(train_data[i,0])
+            x_train.append(train_data[i-60:i, 0])
+            y_train.append(train_data[i, 0])
 
         #Convert x_train and y_train to numpy array
-        x_train,y_train = np.array(x_train),np.array(y_train)
-        x_train = np.reshape(x_train,(x_train.shape[0],x_train.shape[1],1))
+        x_train, y_train = np.array(x_train),np.array(y_train)
+        x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
         #Build the LSTM model
         model = Sequential()
@@ -81,7 +81,7 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
         predictions = scaler.inverse_transform(predictions)
 
         #Get the root mean squared error(RMSE)
-        rmse = np.sqrt(np.mean(predictions - y_test) **2)
+        rmse = np.sqrt(np.mean(predictions - y_test) ** 2)
 
         #Create a future dates array for predicting prices for April 2023
         future_dates = pd.date_range(start=end, periods=30, freq='D')
@@ -105,7 +105,7 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
         valid = pd.concat([valid, future_df], axis=0)
 
         #Visualize the data
-        plt.figure(figsize=(16,8))
+        plt.figure(figsize=(16, 8))
         plt.title('Model')
         plt.xlabel('Date', fontsize=18)
         plt.ylabel('Close Price USD ($)', fontsize=18)
@@ -114,9 +114,8 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
         plt.legend(['Train', 'Val', 'Predictions'], loc='lower right')
 
         # Save the plot in the output directory
-        output_dir = "../../assets"
+        output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'plotfig'))
         plt.savefig(os.path.join(output_dir, "prediction.png"), dpi=300, bbox_inches='tight')
-        plt.savefig('prediction.png')
         return intelligent_pb2.PlotResponse(success=True, message="prediction calculate completed")
 
     def pricePredict(self, request, context):
@@ -127,16 +126,16 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
 
         start_array = start.split("-")
         end_array = end.split("-")
-        start = dt.datetime(int(start_array[0]),int(start_array[1]),int(start_array[2]))
-        end = dt.datetime(int(end_array[0]),int(end_array[1]),int(end_array[2]))
+        start = dt.datetime(int(start_array[0]), int(start_array[1]), int(start_array[2]))
+        end = dt.datetime(int(end_array[0]), int(end_array[1]), int(end_array[2]))
 
-        df = yf.download(ticker, start ,end)
+        df = yf.download(ticker, start, end)
         data = df.filter(['Close'])
         dataset = data.values
         training_data_len = math.ceil(len(dataset)*.8)
 
         #Scale the data
-        scaler = MinMaxScaler(feature_range=(0,1))
+        scaler = MinMaxScaler(feature_range=(0, 1))
         scaled_data = scaler.fit_transform(dataset)
 
         #Create the training data set
@@ -146,12 +145,12 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
         y_train = []
 
         for i in range(60,len(train_data)):
-            x_train.append(train_data[i-60:i,0])
-            y_train.append(train_data[i,0])
+            x_train.append(train_data[i-60:i, 0])
+            y_train.append(train_data[i, 0])
 
         #Convert x_train and y_train to numpy array
-        x_train,y_train = np.array(x_train),np.array(y_train)
-        x_train = np.reshape(x_train,(x_train.shape[0],x_train.shape[1],1))
+        x_train, y_train = np.array(x_train),np.array(y_train)
+        x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
         #Build the LSTM model
         model = Sequential()
@@ -188,7 +187,8 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
         x_future = np.reshape(x_future, (x_future.shape[0], x_future.shape[1], 1))
         future_predictions = model.predict(x_future)
         future_predictions = scaler.inverse_transform(future_predictions)
-        return intelligent_pb2.PriceResponse(price=float(future_predictions[0][0]),message="Price prediction completed")
+        price_double = future_predictions[0][0].astype(float)
+        return intelligent_pb2.PriceResponse(price=price_double, message="Price prediction completed")
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))

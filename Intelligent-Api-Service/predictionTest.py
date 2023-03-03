@@ -1,3 +1,4 @@
+from numpy import double
 import math
 import yfinance as yf
 import numpy as np
@@ -7,7 +8,7 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM
 import matplotlib.pyplot as plt
 import datetime as dt
-#import tensorflow.compat.v2 as tf
+import os
 
 plt.style.use('fivethirtyeight')
 
@@ -104,7 +105,9 @@ plt.ylabel('Close Price USD ($)', fontsize=18)
 plt.plot(train['Close'])
 plt.plot(valid[['Close', 'Predictions']])
 plt.legend(['Train', 'Val', 'Predictions'], loc='lower right')
-plt.show()
+output_dir = "./plotfig"
+plt.savefig(os.path.join(output_dir, "prediction.png"), dpi=300, bbox_inches='tight')
+#plt.savefig('prediction.png')
 
 #Get the quote
 apple_quote = yf.download(company, start ,end)
@@ -123,7 +126,8 @@ X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
 #Get the predicted scaled price
 pred_price = model.predict(X_test)
 pred_price = scaler.inverse_transform(pred_price)
-print(pred_price)
+price = pred_price[0][0].astype(float)
+print(type(price))
 
 
 
