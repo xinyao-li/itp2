@@ -3,7 +3,6 @@ from concurrent import futures
 
 import grpc
 import logging
-import pyotp
 import threading
 import time
 import robin_stocks.robinhood as robin
@@ -14,7 +13,6 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
         username = request.username
         password = request.password
         message_success = "Login successful"
-        #totp = pyotp.TOTP("My2factorAppHere").now()
         try:
             login = robin.login(username, password)
         except Exception as e:
@@ -141,6 +139,6 @@ if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     robinhood_pb2_grpc.add_RobinhoodServiceServicer_to_server(RobinhoodServicer(), server)
     server.add_insecure_port("[::]:9090")
-    print ("Robinhood Python server start")
+    print("Robinhood Python server start")
     server.start()
     server.wait_for_termination()
