@@ -34,6 +34,8 @@ public class StockController {
     @Autowired
     private UserServiceImp userServiceImp;
 
+    private String offical_token;
+
     @RequestMapping(value="/login",method = RequestMethod.GET)
     public String login() {return "login";}
 
@@ -63,22 +65,22 @@ public class StockController {
         LOGGER.info(message);
         if(message.equals("login Success")) {
             String token = genToken();
+            offical_token = token;
             session.setAttribute("token", token);
             return "redirect:/stock/home?token=" + token;
         }
         return "redirect:/stock/login?error=true";
     }
-    @RequestMapping(value="/logout",method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Response> logout(){
+    @RequestMapping(value="/logout",method = RequestMethod.GET)
+    public String logout(){
         try{
             serviceProvider.getRobinhoodService().logout();
         }catch(Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>(Response.USERNAME_PASSWORD_INVALID,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         LOGGER.info("logout Success");
-        return new ResponseEntity<>(Response.SUCCESS,HttpStatus.OK);
+        offical_token = null;
+        return "redirect:/stock/login";
     }
     @RequestMapping(value="/quote",method = RequestMethod.GET)
     @ResponseBody
@@ -119,18 +121,6 @@ public class StockController {
         LOGGER.info("Sell Success");
         return new ResponseEntity<>(Response.SUCCESS,HttpStatus.OK);
     }
-    @RequestMapping(value="/buyPower",method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Double> getBalance() {
-        Double balance = null;
-        try {
-            balance = serviceProvider.getRobinhoodService().getBalance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println(balance);
-        return new ResponseEntity<>(balance,HttpStatus.OK);
-    }
     @RequestMapping(value="/autoBuy",method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Response> autoBuy(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
@@ -160,6 +150,9 @@ public class StockController {
 
     @RequestMapping(value="/holding",method = RequestMethod.GET)
     public String getHolding(Model model){
+        if(offical_token == null) {
+            return "redirect:/stock/login";
+        }
         String holds = null;
         try{
             holds = serviceProvider.getRobinhoodService().getHolding();
@@ -181,6 +174,9 @@ public class StockController {
         }
         for(int i = 0; i < list.size();i++){
             if(Character.isUpperCase(list.get(i).charAt(0))){
+                if(holdingList.size() > 0&&holdingList.get(holdingList.size()-1).getPrice() == null) {
+                    holdingList.remove(holdingList.size()-1);
+                }
                 holdingList.add(new Stock());
                 holdingList.get(holdingList.size()-1).setCompany(list.get(i));
             }
@@ -200,7 +196,17 @@ public class StockController {
                 holdingList.get(holdingList.size()-1).setType(list.get(i+1));
             }
         }
+        if(holdingList.size() > 0&&holdingList.get(holdingList.size()-1).getPrice() == null) {
+            holdingList.remove(holdingList.size()-1);
+        }
+        Double balance = null;
+        try {
+            balance = serviceProvider.getRobinhoodService().getBalance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         model.addAttribute("holdingList",holdingList);
+        model.addAttribute("balance",balance);
         return "holding";
     }
 

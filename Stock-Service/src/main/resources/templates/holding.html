@@ -3,6 +3,42 @@
 <head>
     <meta content="text/html;charset=UTF-8" />
     <title>ITP My Holding</title>
+    <style>
+        h1 {
+          text-align: center
+        }
+        b1 {
+           font-size: 30px;
+           font-family: Verdana;
+           font-weight:normal
+        }
+        b2 {
+           font-size: 20px;
+           font-family: Verdana;
+           font-weight:normal
+        }
+        table {
+            text-align: center;
+            font-family: Verdana;
+            font-weight:normal;
+            width: 70%;
+            border-bottom: 1px solid #ddd;
+            border-collapse: collapse;
+            position: relative;
+            left:12%;
+        }
+        td, th{
+           text-align: center;
+           font-family: Verdana;
+           font-weight:normal;
+           border: 1px solid;
+           height: 70px;
+           padding: 8px;
+        }
+    </style>
+    <h1>
+        <b1>My Robinhood Stocks Holding</b1>
+    </h1>
     <table>
     <thead>
     <tr>
@@ -25,4 +61,8 @@
     </tr>
     </tbody>
     </table>
+    <h1>
+        <b2>My Buying Power:</b2>
+        <td th:text="${balance}"></td>
+    </h1>
 </head>
