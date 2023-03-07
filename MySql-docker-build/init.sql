@@ -1,5 +1,5 @@
-CREATE TABLE collection_table (
-  id INT NOT NULL PRIMARY KEY,
-  ticker VARCHAR(45) NOT NULL
-  company VARCHAR(45) NOT NULL
+CREATE TABLE login_table (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   username VARCHAR(55) NOT NULL UNIQUE,
+   password VARCHAR(55) NOT NULL
 );

@@ -53,4 +53,10 @@ public class RobinhoodApi {
         CompanyResponse companyResponse = stub.getCompany(companyRequest);
         return companyResponse.getCompany();
     }
+
+    public String getHolding(){
+        HoldingRequest holdingRequest = HoldingRequest.newBuilder().build();
+        HoldingResponse holdingResponse = stub.getHolding(holdingRequest);
+        return holdingResponse.getHolds();
+    }
 }

@@ -82,6 +82,18 @@ class CompanyResponse(_message.Message):
     message: str
     def __init__(self, company: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
 
+class HoldingRequest(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
+
+class HoldingResponse(_message.Message):
+    __slots__ = ["holds", "message"]
+    HOLDS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    holds: str
+    message: str
+    def __init__(self, holds: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
+
 class LoginRequest(_message.Message):
     __slots__ = ["password", "username"]
     PASSWORD_FIELD_NUMBER: _ClassVar[int]

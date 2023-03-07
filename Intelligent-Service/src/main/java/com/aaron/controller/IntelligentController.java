@@ -1,8 +1,6 @@
 package com.aaron.controller;
 
-import com.aaron.model.Stock;
 import com.aaron.response.Response;
-import com.aaron.service.IntelligentServiceImp;
 import com.aaron.service.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
 
 @Controller
 @RequestMapping("/intelligent")
@@ -26,9 +21,6 @@ public class IntelligentController {
 
     @Autowired
     private ServiceProvider serviceProvider;
-
-    @Autowired
-    private IntelligentServiceImp intelligentServiceImp;
 
     @RequestMapping(value="/plotPrediction",method = RequestMethod.POST)
     public ResponseEntity<Response> plotPrediction(@RequestParam("ticker")String ticker,@RequestParam("startDate")String startDate,@RequestParam("endDate")String endDate){
@@ -52,26 +44,5 @@ public class IntelligentController {
         }
         LOGGER.info("price should be: "+price);
         return ResponseEntity.ok(price);
-    }
-
-    @RequestMapping(value="/dailyPrediction",method = RequestMethod.POST)
-    public ResponseEntity<Response> dailyPrediction(){
-        List<Stock> stockList = intelligentServiceImp.listCollection();
-        Random random = new Random();
-        Stock stock = stockList.get(random.nextInt(stockList.size()));
-        String ticker = stock.getTicker();
-        LOGGER.info("stock is chosen is: "+ticker);
-        String nextMonth = "";
-        String prevYear = "";
-        try {
-            LocalDate date = LocalDate.now();
-            nextMonth = date.plusDays(30).toString();
-            prevYear = date.minusYears(1).toString();
-            serviceProvider.getIntelligentService().plotPrediction(ticker,prevYear,nextMonth);
-        } catch (Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(Response.PREDICTION_FAILED, HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(Response.SUCCESS,HttpStatus.OK);
     }
 }

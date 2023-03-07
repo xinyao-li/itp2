@@ -1,0 +1,46 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<title>Home page</title>
+<head>
+    <meta content="text/html;charset=UTF-8" />
+    <title>itp login</title>
+    <style>
+        h1 {
+          text-align: center
+        }
+        b1 {
+           font-size: 30px;
+           font-family: Verdana;
+           font-weight:normal
+        }
+        .block {
+            display: block;
+            width: 50%;
+            margin: auto;
+            border: none;
+            background-color: #04AA6D;
+            color: white;
+            padding: 14px 28px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .block:hover {
+            background-color: #ddd;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<form name="home" method="post">
+    <h1>
+        <b1>Welcome to ITP Robinhood Service</b1>
+    </h1>
+    <button class="block">My Robinhood Holding</button>
+    <button class="block">Buy</button>
+    <button class="block">Sell</button>
+    <button class="block">Buy Automatically</button>
+    <button class="block">Sell Automatically</button>
+</form>
+</body>
+</html>

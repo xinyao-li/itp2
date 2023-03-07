@@ -1,0 +1,54 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<title>Login page</title>
+<head>
+    <meta content="text/html;charset=UTF-8" />
+    <title>itp login</title>
+    <style>
+        h1{
+          text-align: center
+        }
+        b1 {
+           font-size: 20px;
+           font-family: Verdana;
+           font-weight:normal
+        }
+        input[type="submit"]{
+            display: block;
+            margin: 0 auto;
+            background-color: #555;
+            color: #fff;
+            border-radius: 10px;
+            height: 30px;
+            width: 100px;
+            font-family: Verdana;
+        }
+        tr{
+           width:50%;
+           font-size: 15px;
+           font-family: Verdana;
+
+        }
+    </style>
+</head>
+<body>
+<form name="login" method="post">
+    <h1>
+        <b1>Login to Robinhood Account</b1>
+    </h1>
+    <table align="center">
+        <tr>
+            <td>username:</td>
+            <td><input type="text" name ="username" size="24"/></td>
+        </tr>
+        <tr>
+            <td>password:</td>
+            <td><input type="password" name="password" size="24"/></td>
+        </tr>
+    </table>
+    <br>
+    <tr>
+        <input type="submit" value="Submit"/>
+    </tr>
+</form>
+</body>
+</html>

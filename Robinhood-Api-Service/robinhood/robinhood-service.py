@@ -1,6 +1,7 @@
 from robinhood import robinhood_pb2_grpc,robinhood_pb2
 from concurrent import futures
 
+import json
 import grpc
 import logging
 import threading
@@ -69,23 +70,23 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
             profile = robin.account.load_account_profile()
             balance = float(profile['buying_power'])
             message = str(balance)
-            return robinhood_pb2.BalanceResponse(balance=balance,message=message)
+            return robinhood_pb2.BalanceResponse(balance=balance, message=message)
         except Exception as e:
             logging.exception("Error during get your balance")
-        return robinhood_pb2.BalanceResponse(balance=None,message="You have no buying power now")
+        return robinhood_pb2.BalanceResponse(balance=None, message="You have no buying power now")
 
     def autoBuy(self, request, context):
         should_stop = threading.Event()
         thread = threading.Thread(target=self.checkBuyPrice(should_stop,request,context))
         thread.start()
-        print("autoBuy is triggered")
+        logging.info("autoBuy is triggered")
         thread.join()
 
     def autoSell(self, request, context):
         should_stop = threading.Event()
         thread = threading.Thread(target=self.checkSellPrice(should_stop,request,context))
         thread.start()
-        print("autoSell is triggered")
+        logging.info("autoSell is triggered")
         thread.join()
 
     def checkBuyPrice(self,should_stop,request,context):
@@ -93,13 +94,13 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
             cur_price = None;
             try:
                 cur_price = float(robin.get_latest_price(request.ticker)[0])
-                print("AutoBuy function current price:"+str(cur_price))
+                logging.info("AutoBuy function current price:"+str(cur_price))
             except Exception as e:
                 logging.exception("No such ticker")
             if cur_price is not None and cur_price <= request.target:
                 try:
                     self.buy(request, context)
-                    print("autoBuy success")
+                    logging.info("autoBuy success")
                 except Exception as e:
                     print(e)
                 should_stop.set()
@@ -111,13 +112,13 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
             cur_price = None;
             try:
                 cur_price = float(robin.get_latest_price(request.ticker)[0])
-                print("AutoSell function current price:"+str(cur_price))
+                logging.info("AutoSell function current price:"+str(cur_price))
             except Exception as e:
                 logging.exception("No such ticker")
             if cur_price is not None and cur_price >= request.target:
                 try:
                     self.sell(request, context)
-                    print("autoSell success")
+                    logging.info("autoSell success")
                 except Exception as e:
                     print(e)
                 should_stop.set()
@@ -134,6 +135,17 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
         except Exception as e:
             print(e)
         return robinhood_pb2.CompanyResponse(company=None, message=message_fail)
+
+    def getHolding(self,request,context):
+        message_success = "Holding Profile retrieved"
+        message_fail = "Not find your holding profile"
+        try:
+            profile = robin.account.build_holdings()
+            logging.info(profile)
+            return robinhood_pb2.CompanyResponse(holds=json.dumps(profile), message=message_success)
+        except Exception as e:
+            print(e)
+        return robinhood_pb2.HoldingResponse(holds=None,message=message_fail)
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
