@@ -12,7 +12,6 @@ try:
 except Exception as e:
     print("username or password invalid")
     print(e)
-
 config = configparser.ConfigParser()
 config.read('config.properties')
 

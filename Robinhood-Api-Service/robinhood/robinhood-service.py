@@ -73,7 +73,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
             return robinhood_pb2.BalanceResponse(balance=balance, message=message)
         except Exception as e:
             logging.exception("Error during get your balance")
-        return robinhood_pb2.BalanceResponse(balance=None, message="You have no buying power now")
+        return robinhood_pb2.BalanceResponse(balance=float(profile['buying_power']), message="You have no buying power now")
 
     def autoBuy(self, request, context):
         should_stop = threading.Event()
@@ -138,14 +138,12 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
 
     def getHolding(self,request,context):
         message_success = "Holding Profile retrieved"
-        message_fail = "Not find your holding profile"
         try:
-            profile = robin.account.build_holdings()
+            profile = robin.build_holdings()
             logging.info(profile)
-            return robinhood_pb2.CompanyResponse(holds=json.dumps(profile), message=message_success)
         except Exception as e:
             print(e)
-        return robinhood_pb2.HoldingResponse(holds=None,message=message_fail)
+        return robinhood_pb2.HoldingResponse(holds=str(profile),message=message_success)
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

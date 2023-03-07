@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<title>Home page</title>
+<head>
+    <meta content="text/html;charset=UTF-8" />
+    <title>ITP My Holding</title>
+    <table>
+    <thead>
+    <tr>
+        <th>company</th>
+        <th>price</th>
+        <th>quantity</th>
+        <th>average_buy_price</th>
+        <th>equity</th>
+        <th>type</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="stock : ${holdingList}">
+        <td th:text="${stock.getCompany()}"></td>
+        <td th:text="${stock.getPrice()}"></td>
+        <td th:text="${stock.getQuantity()}"></td>
+        <td th:text="${stock.getAverage_buy_price()}"></td>
+        <td th:text="${stock.getEquity()}"></td>
+        <td th:text="${stock.getType()}"></td>
+    </tr>
+    </tbody>
+    </table>
+</head>

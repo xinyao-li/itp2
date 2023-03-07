@@ -1,5 +1,6 @@
 package com.aaron.controller;
 
+import com.aaron.model.Stock;
 import com.aaron.model.User;
 import com.aaron.response.Response;
 import com.aaron.service.ServiceProvider;
@@ -10,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -41,6 +44,7 @@ public class StockController {
         }
         return "home";
     }
+
     @RequestMapping(value="/login",method = RequestMethod.POST)
     public String login(@RequestParam("username")String username, @RequestParam("password")String password,HttpSession session){
         List<User> users = userServiceImp.listUser();
@@ -155,16 +159,49 @@ public class StockController {
     }
 
     @RequestMapping(value="/holding",method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<String> getHolding(){
+    public String getHolding(Model model){
         String holds = null;
         try{
             holds = serviceProvider.getRobinhoodService().getHolding();
         }catch(Exception e){
             e.printStackTrace();
         }
-        LOGGER.info(""+holds);
-        return new ResponseEntity<>(holds,HttpStatus.OK);
+        List<String> list = new ArrayList<>();
+        List<Stock> holdingList = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < holds.length();i++){
+            if(Character.isDigit(holds.charAt(i))||Character.isLetter(holds.charAt(i))||holds.charAt(i) == '.'||holds.charAt(i)=='_'){
+                sb.append(holds.charAt(i));
+            }
+            else{
+                if(sb.length() > 0)
+                    list.add(sb.toString());
+                sb = new StringBuilder();
+            }
+        }
+        for(int i = 0; i < list.size();i++){
+            if(Character.isUpperCase(list.get(i).charAt(0))){
+                holdingList.add(new Stock());
+                holdingList.get(holdingList.size()-1).setCompany(list.get(i));
+            }
+            else if(list.get(i).equals("price")){
+                holdingList.get(holdingList.size()-1).setPrice(list.get(i+1));
+            }
+            else if(list.get(i).equals("quantity")){
+                holdingList.get(holdingList.size()-1).setQuantity(list.get(i+1));
+            }
+            else if(list.get(i).equals("average_buy_price")){
+                holdingList.get(holdingList.size()-1).setAverage_buy_price(list.get(i+1));
+            }
+            else if(list.get(i).equals("equity")){
+                holdingList.get(holdingList.size()-1).setEquity(list.get(i+1));
+            }
+            else if(list.get(i).equals("type")){
+                holdingList.get(holdingList.size()-1).setType(list.get(i+1));
+            }
+        }
+        model.addAttribute("holdingList",holdingList);
+        return "holding";
     }
 
     private String genToken() {
