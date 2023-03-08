@@ -82,6 +82,9 @@ public class StockController {
     }
     @RequestMapping(value="/quote",method = RequestMethod.GET)
     public String quote(@RequestParam(value="ticker",required = false)String ticker, Model model) {
+        if(token == null) {
+            return "redirect:/stock/login";
+        }
         Double price = null;
         try {
             price = serviceProvider.getRobinhoodService().quote(ticker);
@@ -98,7 +101,7 @@ public class StockController {
         stock.setTicker(ticker);
         stock.setCompany(serviceProvider.getRobinhoodService().getCompany(ticker));
         stock.setPrice(price_str);
-        model.addAttribute(stock);
+        model.addAttribute("stock",stock);
         return "quote";
     }
 
@@ -143,31 +146,52 @@ public class StockController {
         LOGGER.info("Sell Success");
         return "redirect:/stock/home";
     }
-    @RequestMapping(value="/autoBuy",method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Response> autoBuy(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
-        try{
-            LOGGER.info(ticker+","+target+","+amount);
-            serviceProvider.getRobinhoodService().autoBuy(ticker, target,amount);
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(Response.BUY_FAILED,HttpStatus.PAYLOAD_TOO_LARGE);
+
+    @RequestMapping(value="/autobuy",method = RequestMethod.GET)
+    public String autoBuy(){
+        if(token == null) {
+            return "redirect:/stock/login";
         }
-        LOGGER.info("AutoBuy Completed");
-        return new ResponseEntity<>(Response.SUCCESS,HttpStatus.OK);
+        return "autobuy";
     }
-    @RequestMapping(value="/autoSell",method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Response> autoSell(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
-        try{
-            LOGGER.info(ticker+","+target+","+amount);
-            serviceProvider.getRobinhoodService().autoSell(ticker, target,amount);
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(Response.SELL_FAILED,HttpStatus.INTERNAL_SERVER_ERROR);
+    @RequestMapping(value="/autobuy",method = RequestMethod.POST)
+    public String autoBuy(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount, Model model){
+        Thread thread = new Thread(() -> {
+            try {
+                serviceProvider.getRobinhoodService().autoBuy(ticker, target, amount);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+        String message = "AutoBuy triggered";
+        model.addAttribute("message",message);
+        LOGGER.info("AutoBuy triggered");
+        return "autotriggered";
+    }
+
+    @RequestMapping(value="/autosell",method = RequestMethod.GET)
+    public String autoSell(){
+        if(token == null) {
+            return "redirect:/stock/login";
         }
-        LOGGER.info("AutoSell Completed");
-        return new ResponseEntity<>(Response.SUCCESS,HttpStatus.OK);
+        return "autosell";
+    }
+    @RequestMapping(value="/autosell",method = RequestMethod.POST)
+    @ResponseBody
+    public String autoSell(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount, Model model){
+        Thread thread = new Thread(() -> {
+            try {
+                serviceProvider.getRobinhoodService().autoSell(ticker, target, amount);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+        String message = "AutoSell triggered";
+        model.addAttribute("message",message);
+        LOGGER.info("AutoSell triggered");
+        return "autotriggered";
     }
 
     @RequestMapping(value="/holding",method = RequestMethod.GET)
