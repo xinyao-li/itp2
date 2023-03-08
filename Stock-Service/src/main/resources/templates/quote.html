@@ -1,8 +1,8 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<title>Home page</title>
+<title>Quote page</title>
 <head>
     <meta content="text/html;charset=UTF-8" />
-    <title>ITP My Holding</title>
+    <title>ITP Stock Information</title>
     <style>
         h1 {
           text-align: center
@@ -37,32 +37,20 @@
         }
     </style>
     <h1>
-        <b1>My Robinhood Stocks Holding</b1>
+        <b1>Stocks Information</b1>
     </h1>
     <table>
-    <thead>
-    <tr>
-        <th>company</th>
-        <th>price</th>
-        <th>quantity</th>
-        <th>average_buy_price</th>
-        <th>equity</th>
-        <th>type</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="hold : ${holdingList}">
-        <td th:text="${hold.getCompany()}"></td>
-        <td th:text="${hold.getPrice()}"></td>
-        <td th:text="${hold.getQuantity()}"></td>
-        <td th:text="${hold.getAverage_buy_price()}"></td>
-        <td th:text="${hold.getEquity()}"></td>
-        <td th:text="${hold.getType()}"></td>
-    </tr>
-    </tbody>
+        <thead>
+        <tr>
+            <th>company</th>
+            <th>ticker</th>
+            <th>current price</th>
+        </tr>
+        </thead>
+        <tbody>
+            <td th:text="${stock.getCompany()}"></td>
+            <td th:text="${stock.getTicker()}"></td>
+            <td th:text="${stock.getPrice()}"></td>
+        </tbody>
     </table>
-    <h1>
-        <b2>My Buying Power: $</b2>
-        <td th:text="${balance}"></td>
-    </h1>
 </head>

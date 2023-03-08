@@ -1,0 +1,58 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<title>AutoSell page</title>
+<head>
+    <meta content="text/html;charset=UTF-8" />
+    <title>itp stock autosell</title>
+    <style>
+        h1{
+          text-align: center
+        }
+        b1 {
+           font-size: 20px;
+           font-family: Verdana;
+           font-weight:normal
+        }
+        input[type="submit"]{
+            display: block;
+            margin: 0 auto;
+            background-color: #555;
+            color: #fff;
+            border-radius: 10px;
+            height: 30px;
+            width: 150px;
+            font-family: Verdana;
+        }
+        tr{
+           width:50%;
+           font-size: 15px;
+           font-family: Verdana;
+
+        }
+    </style>
+</head>
+<body>
+<form name="autosell" method="post">
+    <h1>
+        <b1>AutoBuy Stocks</b1>
+    </h1>
+    <table align="center">
+        <tr>
+            <td>ticker:</td>
+            <td><input type="text" name ="ticker" size="24"/></td>
+        </tr>
+        <tr>
+            <td>target price:</td>
+            <td><input type="text" name ="target" size="24"/></td>
+        </tr>
+        <tr>
+            <td>amount:</td>
+            <td><input type="" name="amount" size="24"/></td>
+        </tr>
+    </table>
+    <br>
+    <tr>
+        <input type="submit" value="Place the AutoSell"/>
+    </tr>
+</form>
+</body>
+</html>

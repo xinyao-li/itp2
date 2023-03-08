@@ -41,13 +41,31 @@
             background-color: #ddd;
             color: black;
         }
+        .search-container{
+          position: relative;
+          left: 44%
+        }
+        button[type="submit"]{
+            margin-top: 8px;
+            margin-right: 16px;
+            background: #ddd;
+            font-size: 17px;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+<h1>
+    <b1>Welcome to ITP Robinhood Service</b1>
+</h1>
+<div class="search-container">
+    <form action="/stock/quote" method="GET">
+        <input type="text" placeholder="Search.." name="ticker">
+        <button type="submit",value="Search"><i class="fa fa-search">Search</i></button>
+    </form>
+</div>
 <form name="home" method="post">
-    <h1>
-        <b1>Welcome to ITP Robinhood Service</b1>
-    </h1>
     <a href="/stock/holding" class="block">My Robinhood Holding</a>
     <a href="/stock/buy" class="block">Buy</a>
     <a href="/stock/sell" class="block">Sell</a>

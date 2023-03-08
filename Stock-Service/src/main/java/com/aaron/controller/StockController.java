@@ -1,5 +1,6 @@
 package com.aaron.controller;
 
+import com.aaron.model.Hold;
 import com.aaron.model.Stock;
 import com.aaron.model.User;
 import com.aaron.response.Response;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,7 +26,7 @@ import java.util.Random;
 @RequestMapping("/stock")
 public class StockController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(StockController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StockController.class);
 
     @Autowired
     private ServiceProvider serviceProvider;
@@ -34,21 +34,21 @@ public class StockController {
     @Autowired
     private UserServiceImp userServiceImp;
 
-    private String offical_token;
+    private String token;
 
     @RequestMapping(value="/login",method = RequestMethod.GET)
     public String login() {return "login";}
 
     @RequestMapping(value="/home",method = RequestMethod.GET)
-    public String home(@RequestParam(value = "token", required = false)String token, HttpSession session) {
-        if(token == null || !token.equals(session.getAttribute("token"))) {
+    public String home() {
+        if(token == null) {
             return "redirect:/stock/login";
         }
         return "home";
     }
 
     @RequestMapping(value="/login",method = RequestMethod.POST)
-    public String login(@RequestParam("username")String username, @RequestParam("password")String password,HttpSession session){
+    public String login(@RequestParam("username")String username, @RequestParam("password")String password){
         List<User> users = userServiceImp.listUser();
         if(!verify(users,username,password)){
             return "redirect:/stock/login?error=true";
@@ -64,10 +64,8 @@ public class StockController {
         String message = (price == null)?"login Failed":"login Success";
         LOGGER.info(message);
         if(message.equals("login Success")) {
-            String token = genToken();
-            offical_token = token;
-            session.setAttribute("token", token);
-            return "redirect:/stock/home?token=" + token;
+            token = genToken();
+            return "redirect:/stock/home";
         }
         return "redirect:/stock/login?error=true";
     }
@@ -79,47 +77,71 @@ public class StockController {
             e.printStackTrace();
         }
         LOGGER.info("logout Success");
-        offical_token = null;
+        token = null;
         return "redirect:/stock/login";
     }
     @RequestMapping(value="/quote",method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Double> quote(@RequestParam(value="ticker",required = false)String ticker) {
+    public String quote(@RequestParam(value="ticker",required = false)String ticker, Model model) {
         Double price = null;
         try {
             price = serviceProvider.getRobinhoodService().quote(ticker);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return "redirect:/stock/quote?error=true";
         }
-        System.out.println(price);
-        return new ResponseEntity<>(price,HttpStatus.OK);
+        LOGGER.info(""+price);
+        if(price == null) {
+            return "redirect:/stock/quote?error=true";
+        }
+        String price_str = ""+price;
+        Stock stock = new Stock();
+        stock.setTicker(ticker);
+        stock.setCompany(serviceProvider.getRobinhoodService().getCompany(ticker));
+        stock.setPrice(price_str);
+        model.addAttribute(stock);
+        return "quote";
     }
+
+    @RequestMapping(value="/buy",method = RequestMethod.GET)
+    public String buy() {
+        if(token == null) {
+            return "redirect:/stock/login";
+        }
+        return "buy";
+    }
+
     @RequestMapping(value="/buy",method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Response> buy(@RequestParam("ticker")String ticker, @RequestParam("amount")int amount){
+    public String buy(@RequestParam("ticker")String ticker, @RequestParam("amount")int amount){
         try{
             LOGGER.info(ticker+","+amount);
             serviceProvider.getRobinhoodService().buy(ticker, amount);
         }catch(Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>(Response.BUY_FAILED,HttpStatus.NOT_ACCEPTABLE);
+            return "redirect:/stock/buy?error=true";
         }
         LOGGER.info("Buy Success");
-        return new ResponseEntity<>(Response.SUCCESS,HttpStatus.OK);
+        return "redirect:/stock/home";
     }
+
+    @RequestMapping(value="/sell",method = RequestMethod.GET)
+    public String sell() {
+        if(token == null) {
+            return "redirect:/stock/login";
+        }
+        return "sell";
+    }
+
     @RequestMapping(value="/sell",method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Response> sell(@RequestParam("ticker")String ticker, @RequestParam("amount")int amount){
+    public String sell(@RequestParam("ticker")String ticker, @RequestParam("amount")int amount){
         try{
             LOGGER.info(ticker+","+amount);
             serviceProvider.getRobinhoodService().sell(ticker, amount);
         }catch(Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>(Response.SELL_FAILED,HttpStatus.NOT_ACCEPTABLE);
+            return "redirect:/stock/sell?error=true";
         }
         LOGGER.info("Sell Success");
-        return new ResponseEntity<>(Response.SUCCESS,HttpStatus.OK);
+        return "redirect:/stock/home";
     }
     @RequestMapping(value="/autoBuy",method = RequestMethod.POST)
     @ResponseBody
@@ -150,7 +172,7 @@ public class StockController {
 
     @RequestMapping(value="/holding",method = RequestMethod.GET)
     public String getHolding(Model model){
-        if(offical_token == null) {
+        if(token == null) {
             return "redirect:/stock/login";
         }
         String holds = null;
@@ -158,9 +180,10 @@ public class StockController {
             holds = serviceProvider.getRobinhoodService().getHolding();
         }catch(Exception e){
             e.printStackTrace();
+            return "redirect:/stock/holding?error=true";
         }
         List<String> list = new ArrayList<>();
-        List<Stock> holdingList = new ArrayList<>();
+        List<Hold> holdingList = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < holds.length();i++){
             if(Character.isDigit(holds.charAt(i))||Character.isLetter(holds.charAt(i))||holds.charAt(i) == '.'||holds.charAt(i)=='_'){
@@ -177,7 +200,7 @@ public class StockController {
                 if(holdingList.size() > 0&&holdingList.get(holdingList.size()-1).getPrice() == null) {
                     holdingList.remove(holdingList.size()-1);
                 }
-                holdingList.add(new Stock());
+                holdingList.add(new Hold());
                 holdingList.get(holdingList.size()-1).setCompany(list.get(i));
             }
             else if(list.get(i).equals("price")){

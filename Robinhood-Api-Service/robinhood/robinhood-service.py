@@ -68,7 +68,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
     def getBalance(self, request, context):
         try:
             profile = robin.account.load_account_profile()
-            balance = float(profile['buying_power'])
+            balance = float(profile['portfolio_cash'])
             message = str(balance)
             return robinhood_pb2.BalanceResponse(balance=balance, message=message)
         except Exception as e:

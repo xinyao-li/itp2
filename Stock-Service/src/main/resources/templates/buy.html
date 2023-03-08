@@ -1,0 +1,54 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<title>Buy page</title>
+<head>
+    <meta content="text/html;charset=UTF-8" />
+    <title>itp stock buy</title>
+    <style>
+        h1{
+          text-align: center
+        }
+        b1 {
+           font-size: 20px;
+           font-family: Verdana;
+           font-weight:normal
+        }
+        input[type="submit"]{
+            display: block;
+            margin: 0 auto;
+            background-color: #555;
+            color: #fff;
+            border-radius: 10px;
+            height: 30px;
+            width: 120px;
+            font-family: Verdana;
+        }
+        tr{
+           width:50%;
+           font-size: 15px;
+           font-family: Verdana;
+
+        }
+    </style>
+</head>
+<body>
+<form name="buy" method="post">
+    <h1>
+        <b1>Buy Stocks</b1>
+    </h1>
+    <table align="center">
+        <tr>
+            <td>ticker:</td>
+            <td><input type="text" name ="ticker" size="24"/></td>
+        </tr>
+        <tr>
+            <td>amount:</td>
+            <td><input type="" name="amount" size="24"/></td>
+        </tr>
+    </table>
+    <br>
+    <tr>
+        <input type="submit" value="Place the trade"/>
+    </tr>
+</form>
+</body>
+</html>
