@@ -105,6 +105,7 @@ plt.ylabel('Close Price USD ($)', fontsize=18)
 plt.plot(train['Close'])
 plt.plot(valid[['Close', 'Predictions']])
 plt.legend(['Train', 'Val', 'Predictions'], loc='lower right')
+plt.show()
 output_dir = "./plotfig"
 plt.savefig(os.path.join(output_dir, "prediction.png"), dpi=300, bbox_inches='tight')
 #plt.savefig('prediction.png')
