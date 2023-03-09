@@ -1,7 +1,3 @@
-from intelligent import intelligent_pb2_grpc,intelligent_pb2
-from concurrent import futures
-
-import grpc
 import math
 import yfinance as yf
 import numpy as np
@@ -13,12 +9,8 @@ import matplotlib.pyplot as plt
 import datetime as dt
 import os
 
-class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
-
-    def plotPrediction(self, request, context):
-        ticker = request.ticker
-        start = request.startDate
-        end = request.endDate
+class IntelligentService:
+    def prediction(self,ticker, start, end):
 
         start_array = start.split("-")
         end_array = end.split("-")
@@ -106,7 +98,7 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
 
         #Visualize the data
         plt.figure(figsize=(16, 8))
-        plt.title('Model')
+        plt.title('Prediction Model of '+str(ticker))
         plt.xlabel('Date', fontsize=18)
         plt.ylabel('Close Price USD ($)', fontsize=18)
         plt.plot(train['Close'])
@@ -116,54 +108,7 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
         # Save the plot in the output directory
         output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'plotfig'))
         plt.savefig(os.path.join(output_dir, "prediction.png"), dpi=300, bbox_inches='tight')
-        return intelligent_pb2.PlotResponse(success=True, message="prediction calculate completed")
 
-    def pricePredict(self, request, context):
-
-        ticker = request.ticker
-        start = request.startDate
-        end = request.endDate
-
-        start_array = start.split("-")
-        end_array = end.split("-")
-        start = dt.datetime(int(start_array[0]), int(start_array[1]), int(start_array[2]))
-        end = dt.datetime(int(end_array[0]), int(end_array[1]), int(end_array[2]))
-
-        df = yf.download(ticker, start, end)
-        data = df.filter(['Close'])
-        dataset = data.values
-        training_data_len = math.ceil(len(dataset)*.8)
-
-        #Scale the data
-        scaler = MinMaxScaler(feature_range=(0, 1))
-        scaled_data = scaler.fit_transform(dataset)
-
-        #Create the training data set
-        #Create the scaled traning data set
-        train_data = scaled_data[0:training_data_len, :]
-        x_train = []
-        y_train = []
-
-        for i in range(60,len(train_data)):
-            x_train.append(train_data[i-60:i, 0])
-            y_train.append(train_data[i, 0])
-
-        #Convert x_train and y_train to numpy array
-        x_train, y_train = np.array(x_train),np.array(y_train)
-        x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
-
-        #Build the LSTM model
-        model = Sequential()
-        model.add(LSTM(50, return_sequences=True, input_shape=(x_train.shape[1], 1)))
-        model.add(LSTM(50, return_sequences=False))
-        model.add(Dense(25))
-        model.add(Dense(1))
-
-        #Compile the model
-        model.compile(optimizer='adam', loss='mean_squared_error')
-
-        #Train the model
-        model.fit(x_train, y_train, batch_size=1, epochs=1)
         #Get the last 60 days closing price value and convert the dataframe to array
         last_60_days = data[-60:].values
         #Scale the data to be the value between 0 and 1
@@ -179,21 +124,13 @@ class IntelligentServicer(intelligent_pb2_grpc.IntelligentServiceServicer):
         pred_price = model.predict(X_test)
         pred_price = scaler.inverse_transform(pred_price)
         rmse = np.sqrt(np.mean(pred_price - Y_test) **2)
-        #Create a future dates array for predicting prices for April 2023
+        #Create a future dates array for predicting prices
         future_dates = pd.date_range(start=end, periods=30, freq='D')
 
         #Create the predictions for end date(future)
-        x_future = X_test[-30:] # Use the last 30 days of data to predict future prices
+        x_future = X_test[-60:] # Use the last 60 days of data to predict future prices
         x_future = np.reshape(x_future, (x_future.shape[0], x_future.shape[1], 1))
         future_predictions = model.predict(x_future)
         future_predictions = scaler.inverse_transform(future_predictions)
         price_double = future_predictions[0][0].astype(float)
-        return intelligent_pb2.PriceResponse(price=price_double, message="Price prediction completed")
-
-if __name__ == '__main__':
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))
-    intelligent_pb2_grpc.add_IntelligentServiceServicer_to_server(IntelligentServicer(), server)
-    server.add_insecure_port("[::]:7911")
-    print("Intelligent Python server start")
-    server.start()
-    server.wait_for_termination()
+        return price_double

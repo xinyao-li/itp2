@@ -1,8 +1,6 @@
-from numpy import double
 import math
 import yfinance as yf
 import numpy as np
-import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM
@@ -108,27 +106,9 @@ plt.legend(['Train', 'Val', 'Predictions'], loc='lower right')
 plt.show()
 output_dir = "./plotfig"
 plt.savefig(os.path.join(output_dir, "prediction.png"), dpi=300, bbox_inches='tight')
-#plt.savefig('prediction.png')
+plt.savefig('prediction.png')
 
-#Get the quote
-apple_quote = yf.download(company, start ,end)
-#Create a new dataframe
-new_df = apple_quote.filter(['Close'])
-#Get the last 60 days closing price value and convert the dataframe to array
-last_60_days = new_df[-60:].values
-#Scale the data to be the value between 0 and 1
-last_60_days_scaled = scaler.transform(last_60_days)
-X_test = []
-X_test.append(last_60_days_scaled)
-#Convert the X_test data set to numpy array
-X_test = np.array(X_test)
-#Reshape the data
-X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
-#Get the predicted scaled price
-pred_price = model.predict(X_test)
-pred_price = scaler.inverse_transform(pred_price)
-price = pred_price[0][0].astype(float)
-print(type(price))
+
 
 
 

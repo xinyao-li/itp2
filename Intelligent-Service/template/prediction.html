@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Prediction Page</title>
+    <style>
+        h1{
+          text-align: center
+        }
+        b1 {
+           font-size: 20px;
+           font-family: Verdana;
+           font-weight:normal
+        }
+        button{
+            display: block;
+            margin: 0 auto;
+            background-color: #555;
+            color: #fff;
+            border-radius: 10px;
+            height: 30px;
+            width: 100px;
+            font-family: Verdana;
+        }
+    </style>
+</head>
+<body>
+<h1><b1>Enter Your Data:</b1></h1>
+<form action="/intelligent/prediction" method="post">
+    <table align="center">
+        <tr>
+            <td>Stock ticker</td>
+            <td><input type="text" name="ticker" /></td>
+        </tr>
+        <tr>
+            <td>Training dataset start with</td>
+            <td><input type="text" name="start"/></td>
+        </tr>
+        <tr>
+            <td>Target date to predict</td>
+            <td><input type="text" name="end"></td>
+        </tr>
+    </table>
+    <br>
+    <td><button onclick="predict()">Predict</button></td>
+</form>
+</body>
+</html>
