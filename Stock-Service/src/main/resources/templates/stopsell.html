@@ -23,6 +23,14 @@
            font-family: Verdana;
            font-weight:normal
         }
+        td, th{
+           text-align: center;
+           font-family: Verdana;
+           font-weight:normal;
+           border: 1px solid;
+           height: 70px;
+           padding: 8px;
+        }
         input[type="submit"]{
             display: block;
             margin: 0 auto;
@@ -30,7 +38,7 @@
             color: #fff;
             border-radius: 10px;
             height: 30px;
-            width: 150px;
+            width: 170px;
             font-family: Verdana;
         }
         tr{
@@ -73,11 +81,8 @@
         <input type="submit" value="Terminate the AutoSell"/>
     </tr>
 
-    <h1>
-        <td th:text="${message}"></td>
-    </h1>
-
     <br>
+    <h2><a href="/stock/autosell" class="block">Set another AutoSell</a></h2>
     <h2><a href="/stock/home" class="block">Back to Home</a></h2>
 </form>
 </body>

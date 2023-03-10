@@ -1,7 +1,4 @@
-import threading
-import time
-
-from flask import Flask, jsonify, request, render_template, redirect,session
+from flask import Flask, request, render_template, redirect,session
 from intelligent.predictionAlgroithms import IntelligentService
 
 app = Flask(__name__, template_folder='../template', static_folder='../plotfig')

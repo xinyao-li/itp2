@@ -160,7 +160,7 @@ public class StockController {
         return "redirect:/stock/stopbuy";
     }
     @RequestMapping(value="/autobuy",method = RequestMethod.POST)
-    public String autoBuy(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount, Model model){
+    public String autoBuy(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
         Thread thread = new Thread(() -> {
             try {
                 serviceProvider.getRobinhoodService().autoBuy(ticker, target, amount);
@@ -169,8 +169,6 @@ public class StockController {
             }
         });
         thread.start();
-        String message = "AutoBuy triggered";
-        model.addAttribute("message",message);
         autoBuying.add(new AutoingStock());
         autoBuying.get(autoBuying.size()-1).setTicker(ticker);
         autoBuying.get(autoBuying.size()-1).setTarget(target);
@@ -214,23 +212,31 @@ public class StockController {
     }
     @RequestMapping(value="/autosell",method = RequestMethod.POST)
     @ResponseBody
-    public String autoSell(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount, Model model){
-        Thread thread = new Thread(() -> {
-            try {
-                serviceProvider.getRobinhoodService().autoSell(ticker, target, amount);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        thread.start();
-        String message = "AutoSell triggered";
-        model.addAttribute("message",message);
-        autoSelling.add(new AutoingStock());
-        autoSelling.get(autoSelling.size()-1).setTicker(ticker);
-        autoSelling.get(autoSelling.size()-1).setTarget(target);
-        autoSelling.get(autoSelling.size()-1).setAmount(amount);
-        LOGGER.info("AutoSell triggered");
-        return "autotriggered";
+    public String autoSell(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
+        String holds = null;
+        try{
+            holds = serviceProvider.getRobinhoodService().getHolding();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        List<Hold> holdList = convertInfo(holds);
+        if(containsStock(holdList,ticker)) {
+            Thread thread = new Thread(() -> {
+                try {
+                    serviceProvider.getRobinhoodService().autoSell(ticker, target, amount);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            thread.start();
+            autoSelling.add(new AutoingStock());
+            autoSelling.get(autoSelling.size() - 1).setTicker(ticker);
+            autoSelling.get(autoSelling.size() - 1).setTarget(target);
+            autoSelling.get(autoSelling.size() - 1).setAmount(amount);
+            LOGGER.info("AutoSell triggered");
+            return "autotriggered";
+        }
+        return "redirect:/stock/autosell";
     }
 
     @RequestMapping(value="/stopsell",method = RequestMethod.GET)
@@ -269,6 +275,19 @@ public class StockController {
             e.printStackTrace();
             return "redirect:/stock/holding?error=true";
         }
+        List<Hold> holdingList = convertInfo(holds);
+        Double balance = null;
+        try {
+            balance = serviceProvider.getRobinhoodService().getBalance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("holdingList",holdingList);
+        model.addAttribute("balance",balance);
+        return "holding";
+    }
+
+    private List<Hold> convertInfo(String holds){
         List<String> list = new ArrayList<>();
         List<Hold> holdingList = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
@@ -309,17 +328,16 @@ public class StockController {
         if(holdingList.size() > 0&&holdingList.get(holdingList.size()-1).getPrice() == null) {
             holdingList.remove(holdingList.size()-1);
         }
-        Double balance = null;
-        try {
-            balance = serviceProvider.getRobinhoodService().getBalance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        model.addAttribute("holdingList",holdingList);
-        model.addAttribute("balance",balance);
-        return "holding";
+        return holdingList;
     }
 
+    private boolean containsStock(List<Hold> holdList,String ticker){
+        for(Hold hold: holdList){
+            if(hold.getCompany().equals(ticker))
+                return true;
+        }
+        return false;
+    }
     private String genToken() {
         return randomCode("0123456789abcdefghijklmnopqrstuvwxyz", 32);
     }
