@@ -14,6 +14,8 @@ service RobinhoodService {
   rpc getBalance(BalanceRequest) returns (BalanceResponse){}
   rpc autoBuy(AutoBuyRequest) returns (AutoBuyResponse){}
   rpc autoSell(AutoSellRequest) returns (AutoSellResponse){}
+  rpc stopBuy(StopBuyRequest) returns (StopBuyResponse){}
+  rpc stopSell(StopSellRequest) returns (StopSellResponse){}
   rpc getCompany(CompanyRequest) returns (CompanyResponse){}
   rpc getHolding(HoldingRequest) returns (HoldingResponse){}
 }
@@ -88,6 +90,24 @@ message AutoSellRequest {
 }
 
 message AutoSellResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message StopBuyRequest{
+  string ticker = 1;
+}
+
+message StopBuyResponse{
+  bool success = 1;
+  string message = 2;
+}
+
+message StopSellRequest{
+  string ticker = 1;
+}
+
+message StopSellResponse{
   bool success = 1;
   string message = 2;
 }

@@ -2,3 +2,4 @@ robin-stocks
 grpcio
 grpcio-tools
 mysql-connector-python
+flask

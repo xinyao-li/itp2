@@ -1,7 +1,6 @@
 from robinhood import robinhood_pb2_grpc,robinhood_pb2
 from concurrent import futures
 
-import json
 import grpc
 import logging
 import threading
@@ -9,6 +8,9 @@ import time
 import robin_stocks.robinhood as robin
 
 class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
+
+    threads_buy = {}
+    threads_sell = {}
 
     def login(self, request, context):
         username = request.username
@@ -78,6 +80,8 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
     def autoBuy(self, request, context):
         should_stop = threading.Event()
         thread = threading.Thread(target=self.checkBuyPrice(should_stop,request,context))
+        buy_ticker = 'buy_'+request.ticker
+        self.threads_buy[buy_ticker] = thread
         thread.start()
         logging.info("autoBuy is triggered")
         thread.join()
@@ -85,9 +89,28 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
     def autoSell(self, request, context):
         should_stop = threading.Event()
         thread = threading.Thread(target=self.checkSellPrice(should_stop,request,context))
+        sell_ticker = 'sell_'+request.ticker
+        self.threads_sell[sell_ticker] = thread
         thread.start()
         logging.info("autoSell is triggered")
         thread.join()
+
+    def stopBuy(self, request, context):
+        buy_ticker = 'buy_'+request.ticker
+        thread = self.threads_buy.get(buy_ticker)
+        if thread is None:
+            return robinhood_pb2.StopBuyResponse(success=False, message="No thread found for ticker")
+        thread.join(timeout=1)
+        del self.threads_buy[buy_ticker]
+        return robinhood_pb2.StopBuyResponse(success=True, message="Thread stopped for autoBuying ticker")
+    def stopSell(self, request, context):
+        sell_ticker = 'sell_'+request.ticker
+        thread = self.threads_sell.get(sell_ticker)
+        if thread is None:
+            return robinhood_pb2.StopSellResponse(success=False, message="No thread found for ticker")
+        thread.join(timeout=1)
+        del self.threads_sell[sell_ticker]
+        return robinhood_pb2.StopSellResponse(success=True, message="Thread stopped autoSelling ticker")
 
     def checkBuyPrice(self,should_stop,request,context):
         while not should_stop.is_set():
@@ -104,6 +127,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
                 except Exception as e:
                     print(e)
                 should_stop.set()
+                del self.threads_buy[request.ticker]
             # Wait for some time before checking the price again
             time.sleep(1)
 
@@ -122,6 +146,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
                 except Exception as e:
                     print(e)
                 should_stop.set()
+                del self.threads_sell[request.ticker]
             # Wait for some time before checking the price again
             time.sleep(1)
 

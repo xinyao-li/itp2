@@ -7,4 +7,3 @@ keras
 matplotlib
 tensorflow
 grpcio-tools
-flask

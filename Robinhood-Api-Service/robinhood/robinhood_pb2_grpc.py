@@ -54,6 +54,16 @@ class RobinhoodServiceStub(object):
                 request_serializer=robinhood__pb2.AutoSellRequest.SerializeToString,
                 response_deserializer=robinhood__pb2.AutoSellResponse.FromString,
                 )
+        self.stopBuy = channel.unary_unary(
+                '/robinhood.RobinhoodService/stopBuy',
+                request_serializer=robinhood__pb2.StopBuyRequest.SerializeToString,
+                response_deserializer=robinhood__pb2.StopBuyResponse.FromString,
+                )
+        self.stopSell = channel.unary_unary(
+                '/robinhood.RobinhoodService/stopSell',
+                request_serializer=robinhood__pb2.StopSellRequest.SerializeToString,
+                response_deserializer=robinhood__pb2.StopSellResponse.FromString,
+                )
         self.getCompany = channel.unary_unary(
                 '/robinhood.RobinhoodService/getCompany',
                 request_serializer=robinhood__pb2.CompanyRequest.SerializeToString,
@@ -117,6 +127,18 @@ class RobinhoodServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopBuy(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSell(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def getCompany(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -171,6 +193,16 @@ def add_RobinhoodServiceServicer_to_server(servicer, server):
                     servicer.autoSell,
                     request_deserializer=robinhood__pb2.AutoSellRequest.FromString,
                     response_serializer=robinhood__pb2.AutoSellResponse.SerializeToString,
+            ),
+            'stopBuy': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopBuy,
+                    request_deserializer=robinhood__pb2.StopBuyRequest.FromString,
+                    response_serializer=robinhood__pb2.StopBuyResponse.SerializeToString,
+            ),
+            'stopSell': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSell,
+                    request_deserializer=robinhood__pb2.StopSellRequest.FromString,
+                    response_serializer=robinhood__pb2.StopSellResponse.SerializeToString,
             ),
             'getCompany': grpc.unary_unary_rpc_method_handler(
                     servicer.getCompany,
@@ -325,6 +357,40 @@ class RobinhoodService(object):
         return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/autoSell',
             robinhood__pb2.AutoSellRequest.SerializeToString,
             robinhood__pb2.AutoSellResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopBuy(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/stopBuy',
+            robinhood__pb2.StopBuyRequest.SerializeToString,
+            robinhood__pb2.StopBuyResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSell(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/robinhood.RobinhoodService/stopSell',
+            robinhood__pb2.StopSellRequest.SerializeToString,
+            robinhood__pb2.StopSellResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

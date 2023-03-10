@@ -151,3 +151,31 @@ class SellResponse(_message.Message):
     message: str
     success: bool
     def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
+
+class StopBuyRequest(_message.Message):
+    __slots__ = ["ticker"]
+    TICKER_FIELD_NUMBER: _ClassVar[int]
+    ticker: str
+    def __init__(self, ticker: _Optional[str] = ...) -> None: ...
+
+class StopBuyResponse(_message.Message):
+    __slots__ = ["message", "success"]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    message: str
+    success: bool
+    def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...
+
+class StopSellRequest(_message.Message):
+    __slots__ = ["ticker"]
+    TICKER_FIELD_NUMBER: _ClassVar[int]
+    ticker: str
+    def __init__(self, ticker: _Optional[str] = ...) -> None: ...
+
+class StopSellResponse(_message.Message):
+    __slots__ = ["message", "success"]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    message: str
+    success: bool
+    def __init__(self, success: bool = ..., message: _Optional[str] = ...) -> None: ...

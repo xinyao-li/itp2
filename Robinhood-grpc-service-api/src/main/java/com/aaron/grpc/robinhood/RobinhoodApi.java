@@ -48,6 +48,17 @@ public class RobinhoodApi {
         AutoSellRequest autoSellRequest = AutoSellRequest.newBuilder().setTicker(ticker).setTarget(target).setAmount(amount).build();
         AutoSellResponse autoSellResponse = stub.autoSell(autoSellRequest);
     }
+
+    public void stopBuy(String ticker){
+        StopBuyRequest stopBuyRequest = StopBuyRequest.newBuilder().setTicker(ticker).build();
+        StopBuyResponse stopBuyResponse = stub.stopBuy(stopBuyRequest);
+    }
+
+    public void stopSell(String ticker){
+        StopSellRequest stopSellRequest = StopSellRequest.newBuilder().setTicker(ticker).build();
+        StopSellResponse stopSellResponse = stub.stopSell(stopSellRequest);
+    }
+
     public String getCompany(String ticker){
         CompanyRequest companyRequest = CompanyRequest.newBuilder().setTicker(ticker).build();
         CompanyResponse companyResponse = stub.getCompany(companyRequest);

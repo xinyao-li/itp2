@@ -20,6 +20,7 @@ def predict():
         session['start'] = start
         session['end'] = end
         return redirect('/intelligent/loading')
+
 @app.route('/intelligent/loading',methods=['GET'])
 def loading():
     return render_template('loading.html')

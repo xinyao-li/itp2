@@ -1,5 +1,6 @@
 package com.aaron.controller;
 
+import com.aaron.model.AutoingStock;
 import com.aaron.model.Hold;
 import com.aaron.model.Stock;
 import com.aaron.model.User;
@@ -32,6 +33,11 @@ public class StockController {
     private UserServiceImp userServiceImp;
 
     private String token;
+
+
+    private List<AutoingStock> autoBuying = new ArrayList<>();
+
+    private List<AutoingStock> autoSelling = new ArrayList<>();
 
     @RequestMapping(value="/login",method = RequestMethod.GET)
     public String login() {return "login";}
@@ -149,7 +155,9 @@ public class StockController {
         if(token == null) {
             return "redirect:/stock/login";
         }
-        return "autobuy";
+        if(autoBuying.size() == 0)
+            return "autobuy";
+        return "redirect:/stock/stopbuy";
     }
     @RequestMapping(value="/autobuy",method = RequestMethod.POST)
     public String autoBuy(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount, Model model){
@@ -163,8 +171,36 @@ public class StockController {
         thread.start();
         String message = "AutoBuy triggered";
         model.addAttribute("message",message);
+        autoBuying.add(new AutoingStock());
+        autoBuying.get(autoBuying.size()-1).setTicker(ticker);
+        autoBuying.get(autoBuying.size()-1).setTarget(target);
+        autoBuying.get(autoBuying.size()-1).setAmount(amount);
         LOGGER.info("AutoBuy triggered");
         return "autotriggered";
+    }
+
+    @RequestMapping(value="/stopbuy",method = RequestMethod.GET)
+    public String stopBuy(Model model){
+        if(token == null) {
+            return "redirect:/stock/login";
+        }
+        model.addAttribute("autoBuying",autoBuying);
+        return "stopbuy";
+    }
+    @RequestMapping(value="/stopbuy",method = RequestMethod.POST)
+    public String stopBuy(@RequestParam("ticker")String ticker) {
+        try {
+            serviceProvider.getRobinhoodService().stopBuy(ticker);
+            for (int i = 0; i < autoBuying.size(); i++) {
+                if (autoBuying.get(i).getTicker().equals(ticker)){
+                    autoBuying.remove(i);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/stock/stopbuy";
     }
 
     @RequestMapping(value="/autosell",method = RequestMethod.GET)
@@ -172,7 +208,9 @@ public class StockController {
         if(token == null) {
             return "redirect:/stock/login";
         }
-        return "autosell";
+        if(autoSelling.size() == 0)
+            return "autosell";
+        return "redirect:/stock/stopsell";
     }
     @RequestMapping(value="/autosell",method = RequestMethod.POST)
     @ResponseBody
@@ -187,8 +225,36 @@ public class StockController {
         thread.start();
         String message = "AutoSell triggered";
         model.addAttribute("message",message);
+        autoSelling.add(new AutoingStock());
+        autoSelling.get(autoSelling.size()-1).setTicker(ticker);
+        autoSelling.get(autoSelling.size()-1).setTarget(target);
+        autoSelling.get(autoSelling.size()-1).setAmount(amount);
         LOGGER.info("AutoSell triggered");
         return "autotriggered";
+    }
+
+    @RequestMapping(value="/stopsell",method = RequestMethod.GET)
+    public String stopSell(Model model){
+        if(token == null) {
+            return "redirect:/stock/login";
+        }
+        model.addAttribute("autoSelling",autoSelling);
+        return "stopsell";
+    }
+    @RequestMapping(value="/stopsell",method = RequestMethod.POST)
+    public String stopSell(@RequestParam("ticker")String ticker) {
+        try {
+            serviceProvider.getRobinhoodService().stopSell(ticker);
+            for (int i = 0; i < autoSelling.size(); i++) {
+                if (autoSelling.get(i).getTicker().equals(ticker)){
+                    autoSelling.remove(i);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/stock/stopsell";
     }
 
     @RequestMapping(value="/holding",method = RequestMethod.GET)
