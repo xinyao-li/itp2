@@ -1,3 +1,5 @@
+import logging
+
 import math
 import yfinance as yf
 import numpy as np
@@ -10,7 +12,7 @@ import datetime as dt
 import os
 
 class IntelligentService:
-    def prediction(self,ticker, start, end):
+    def prediction(self, ticker, start, end):
 
         start_array = start.split("-")
         end_array = end.split("-")

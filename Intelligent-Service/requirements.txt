@@ -8,3 +8,4 @@ matplotlib
 tensorflow
 grpcio-tools
 flask
+redis

@@ -236,7 +236,7 @@ public class StockController {
             LOGGER.info("AutoSell triggered");
             return "autotriggered";
         }
-        return "redirect:/stock/autosell";
+        return "redirect:/stock/autosell?error=true";
     }
 
     @RequestMapping(value="/stopsell",method = RequestMethod.GET)

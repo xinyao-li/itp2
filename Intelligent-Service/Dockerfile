@@ -8,11 +8,18 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+
+RUN apt-get update && \
+    apt-get install -y redis-server && \
+    service redis-server start
+
 COPY . .
 
 COPY intelligent /app/intelligent
 
 COPY template /app/template
+
+COPY resources /app/resources
 
 ENV PYTHONPATH="${PYTHONPATH}:/app"
 
