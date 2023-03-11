@@ -11,7 +11,7 @@
 	<modules>
 		<module>robinhood-grpc-service-api</module>
 		<module>Stock-Service</module>
-		<module>API-Gateway-Zuul</module>
+		<module>API-Gateway</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
