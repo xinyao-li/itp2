@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql-image
+    ports:
+      - 3306:3306
+
+  robinhood-api-service:
+    image: robinhood-api-service-image
+    links:
+      - mysql
+    ports:
+      - 9090:9090
+
+  stock-service:
+    image: stock-java-sdk-image
+    links:
+      - robinhood-api-service
+      - mysql
+    command:
+      - "--mysql.address=192.168.1.67"
+      - "--robinhood.address=192.168.1.67"
+    ports:
+      - 8082:8082
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+  intelligent-service:
+    image: intelligent-python-service-image
+    links:
+      - redis
+    ports:
+      - 8084:8084
+
+  api-gateway:
+    image: api-gateway-spring-cloud-image
+    links:
+      - stock-service
+      - intelligent-service
+    ports:
+      - 8080:8080
