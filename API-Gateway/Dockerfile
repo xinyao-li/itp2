@@ -6,5 +6,4 @@ WORKDIR /app
 
 COPY target/API-Gateway-1.0-SNAPSHOT.jar /app
 
-
 ENTRYPOINT ["java","-jar","API-Gateway-1.0-SNAPSHOT.jar"]
