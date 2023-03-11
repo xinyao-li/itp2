@@ -72,6 +72,7 @@ public class StockController {
         }
         return "redirect:/stock/login?error=true";
     }
+
     @RequestMapping(value="/logout",method = RequestMethod.GET)
     public String logout(){
         try{
@@ -83,6 +84,7 @@ public class StockController {
         token = null;
         return "redirect:/stock/login";
     }
+
     @RequestMapping(value="/quote",method = RequestMethod.GET)
     public String quote(@RequestParam(value="ticker",required = false)String ticker, Model model) {
         if(token == null) {
@@ -159,6 +161,7 @@ public class StockController {
             return "autobuy";
         return "redirect:/stock/stopbuy";
     }
+
     @RequestMapping(value="/autobuy",method = RequestMethod.POST)
     public String autoBuy(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
         Thread thread = new Thread(() -> {
@@ -185,6 +188,7 @@ public class StockController {
         model.addAttribute("autoBuying",autoBuying);
         return "stopbuy";
     }
+
     @RequestMapping(value="/stopbuy",method = RequestMethod.POST)
     public String stopBuy(@RequestParam("ticker")String ticker) {
         try {
@@ -210,6 +214,7 @@ public class StockController {
             return "autosell";
         return "redirect:/stock/stopsell";
     }
+
     @RequestMapping(value="/autosell",method = RequestMethod.POST)
     @ResponseBody
     public String autoSell(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
@@ -338,9 +343,11 @@ public class StockController {
         }
         return false;
     }
+
     private String genToken() {
         return randomCode("0123456789abcdefghijklmnopqrstuvwxyz", 32);
     }
+
     private String randomCode(String s, int size) {
         StringBuilder result = new StringBuilder(size);
 

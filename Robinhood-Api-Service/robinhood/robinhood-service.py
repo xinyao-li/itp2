@@ -103,6 +103,7 @@ class RobinhoodServicer(robinhood_pb2_grpc.RobinhoodServiceServicer):
         thread.join(timeout=1)
         del self.threads_buy[buy_ticker]
         return robinhood_pb2.StopBuyResponse(success=True, message="Thread stopped for autoBuying ticker")
+
     def stopSell(self, request, context):
         sell_ticker = 'sell_'+request.ticker
         thread = self.threads_sell.get(sell_ticker)
