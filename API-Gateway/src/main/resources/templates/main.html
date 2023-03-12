@@ -23,9 +23,7 @@
            text-decoration:none
         }
         .block {
-            display: inline;
-            width: fit-content;
-            margin: 70px;
+            width: 200px;
             border: none;
             background-color: #04AA6D;
             color: white;
@@ -36,18 +34,26 @@
             cursor: pointer;
             text-align: center;
         }
-        p{
-          font-size: 1.5rem;
-          font-weight: normal;
-          margin: 10px 0;
-          padding: 5px;
-          text-align:center
+        .block2 {
+            width: 200px;
+            border: none;
+            background-color: #04AA6D;
+            color: white;
+            padding: 14px 55px;
+            font-size: 16px;
+            font-family: Verdana;
+            font-weight:normal;
+            cursor: pointer;
+            text-align: center;
         }
-        pre{
-          font-weight: normal;
+        p{
+          text-align: justify;
+          font-size: 1.5rem;
+          font-weight: bold;
           margin: 10px 0;
           padding: 5px;
-          text-align:center;
+          margin-left: 20%;
+          margin-right: 20%;
         }
    </style>
 </head>
@@ -55,19 +61,21 @@
 <h1>
     <b1>Welcome to Intelligent Trading Platform</b1>
 </h1>
+
 <p>Introduction:</p>
-<pre>
+        <p style="font-size: 1.0rem;font-family: Verdana;font-weight: normal">
             Intelligent Trading Platform is a Robinhood support stock trading platform with include
             intelligent consultant and auto-trading functionality.
-        </pre>
+        </p>
+
 <p>Robinhood Stock Service:</p>
-<pre>
+        <p style="font-size: 1.0rem;font-family: Verdana;font-weight: normal">
             Support Robinhood customers buy and sell any stock manually or automatically, User can view
             currently stock status you holding and buy or sell. Meanwhile, User can set an automatic buy
             and sell in a particular price.
-        </pre>
+        </p>
 <p>Intelligent Service:</p>
-<pre>
+        <p style="font-size: 1.0rem;font-family: Verdana;font-weight: normal">
              Based on prediction model built by ML training algorithms,all algorithms simulation will use
              the data Yahoo API provided as resource.The service use Flask to create the RESTful API. It
              will return the prediction analysis graphand predicted price of target date which Robinhood
@@ -75,12 +83,12 @@
              from and the date you want to see the prediction.Both start and end date must be in format
              XXXX-XX-XX. Eventually it will represent a prediction plotand the predicted price according to
              the data in last 60 days.
-         </pre>
+         </p>
 
 <h1>
     <form name="main">
-        <a href="/stock/login" class="block">Robinhood Stock Service</a>
-        <a href="/intelligent" class="block">Intelligent Service</a>
+        <h1><a href="/stock/login" class="block">Robinhood Stock Service</a></h1>
+        <h1><a href="/intelligent" class="block2">Intelligent Service</a></h1>
         <br>
     </form>
 </h1>
