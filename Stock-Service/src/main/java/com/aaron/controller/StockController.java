@@ -216,7 +216,6 @@ public class StockController {
     }
 
     @RequestMapping(value="/autosell",method = RequestMethod.POST)
-    @ResponseBody
     public String autoSell(@RequestParam("ticker")String ticker, @RequestParam("target")double target,@RequestParam("amount")double amount){
         String holds = null;
         try{
